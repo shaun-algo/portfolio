@@ -1,0 +1,198 @@
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--gradient-1);
+    color: white;
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-primary:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.5), var(--glow-primary);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateY(-3px);
+}
+
+/* Modern Hero CTA Links */
+.hero-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #ffffff;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.02em;
+}
+
+.hero-cta-link .cta-text {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-cta-link .cta-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-cta-link .cta-arrow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    transform: scale(0);
+    border-radius: 50%;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-cta-link .cta-arrow svg {
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-cta-link .cta-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-cta-link:hover {
+    transform: translateX(8px);
+}
+
+.hero-cta-link:hover .cta-arrow {
+    border-color: #ffffff;
+    transform: rotate(45deg);
+}
+
+.hero-cta-link:hover .cta-arrow::before {
+    transform: scale(1);
+}
+
+.hero-cta-link:hover .cta-arrow svg {
+    stroke: #000000;
+}
+
+.hero-cta-link:hover .cta-underline {
+    width: calc(100% - 45px);
+}
+
+.hero-cta-link.secondary {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.hero-cta-link.secondary .cta-arrow {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.hero-cta-link.secondary:hover {
+    color: #ffffff;
+}
+
+.hero-cta-link.secondary:hover .cta-arrow {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hero-cta-link.secondary .cta-underline {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Sections */
+.section {
+    padding: 8rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-header {
+    margin-bottom: 5rem;
+}
+
+.section-tag {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.section-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    color: var(--text-color);
+}
+
+.section-description {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.8;
+    font-weight: 300;
+}

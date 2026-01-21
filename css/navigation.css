@@ -1,0 +1,197 @@
+/* Navigation */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 1.5rem 0;
+    transition: all 0.3s ease;
+}
+
+nav.scrolled {
+    padding: 1rem 0;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-transform: uppercase;
+}
+
+.logo:hover {
+    transform: translateX(5px);
+}
+
+.nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    position: relative;
+    transition: color 0.3s ease;
+    text-transform: uppercase;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent-highlight);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--text-color);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: var(--text-color);
+    transition: all 0.3s ease;
+    border-radius: 3px;
+}
+
+/* Scroll Progress Bar */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.8);
+    width: 0%;
+    z-index: 1001;
+    transition: width 0.1s ease;
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 45px;
+    height: 45px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-highlight);
+    background: var(--accent-highlight);
+}
+
+.back-to-top svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-color);
+    transition: fill 0.3s ease;
+}
+
+.back-to-top:hover svg {
+    fill: white;
+}
+
+/* Resume Download Link */
+.resume-link {
+    padding: 0.5rem 1.25rem !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-radius: 0 !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.resume-link:hover {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+}
+
+/* SweetAlert2 Custom Styling */
+.swal-custom-popup {
+    border: 3px solid #ffffff !important;
+    border-radius: 0 !important;
+}
+
+.swal-confirm-btn {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 2rem !important;
+    border-radius: 0 !important;
+}
+
+.swal-confirm-btn:hover {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.swal-cancel-btn {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 2rem !important;
+    border-radius: 0 !important;
+}
+
+.swal-cancel-btn:hover {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
