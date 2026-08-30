@@ -10,14 +10,17 @@ import {
   Download,
   Github,
   Instagram,
+  Layers3,
   Linkedin,
   Mail,
   MapPin,
   Menu,
   MonitorCog,
+  Palette,
   Phone,
   Printer,
   Send,
+  Sparkles,
   Users,
   X,
   Zap,
@@ -32,6 +35,9 @@ type Project = {
   title: string;
   meta: string;
   description: string;
+  concept: string;
+  tools: string;
+  timeSpent: string;
   tags: string[];
   image?: string;
   imageAlt?: string;
@@ -50,6 +56,7 @@ type RellaxConstructor = new (
 const navItems = [
   ["about", "About"],
   ["projects", "Projects"],
+  ["process", "Process"],
   ["experience", "Experience"],
   ["contact", "Contact"],
 ] as const;
@@ -60,8 +67,11 @@ const projects: Project[] = [
     title: "GlowAura",
     meta: "E-commerce Project | 2024",
     description:
-      "Developed a responsive website with shopping cart, product management, and payment integration using front-end  tech stack development and principles.",
-    tags: ["HTML/CSS", "PHP", "Javascript"],
+      "Designed and developed a responsive storefront focused on soft product presentation, clear browsing, cart flow, and checkout readiness.",
+    concept: "A clean fragrance and beauty shop interface with gentle product emphasis and simple buying paths.",
+    tools: "HTML, CSS, PHP, JavaScript",
+    timeSpent: "3 weeks",
+    tags: ["HTML/CSS", "PHP", "JavaScript"],
     image: "/img/glowaura.png",
     imageAlt: "GlowAura fragrance and beauty website preview",
   },
@@ -71,6 +81,9 @@ const projects: Project[] = [
     meta: "Academic System Project | 2024 - 2025",
     description:
       "Collaborated as a Group System Programmer to build a comprehensive academic hospital billing system, managing coding, database design, and system integration.",
+    concept: "A structured billing workflow that turns patient charges, records, and payment steps into a readable operator interface.",
+    tools: "PHP, MySQL, HTML, CSS",
+    timeSpent: "1 semester",
     tags: ["HTML/CSS", "PHP", "MYSQL"],
     image: "/img/HospitalBilling.png",
     imageAlt: "Hospital billing system project preview",
@@ -81,6 +94,9 @@ const projects: Project[] = [
     meta: "Retail System Project | 2025",
     description:
       "Developed a fully functional POS system for retail clients, including inventory management, sales tracking, and receipt generation with database integration.",
+    concept: "A compact retail dashboard designed for fast scanning, quick item entry, and dependable transaction records.",
+    tools: "PHP, JavaScript, MySQL",
+    timeSpent: "4 weeks",
     tags: ["PHP", "JavaScript", "MySQL"],
     image: "/img/POS.png",
     imageAlt: "Point of sale system project preview",
@@ -91,6 +107,9 @@ const projects: Project[] = [
     meta: "Game Development Project | 2026",
     description:
       "Built a cross-platform 2D action-adventure game where players control a necromancer, defeat sewer monsters, collect souls, summon allies, and battle a final boss.",
+    concept: "A dark fantasy game concept built around summoning, survival pressure, and readable 2D combat feedback.",
+    tools: "Unity, C#",
+    timeSpent: "8 weeks",
     tags: ["Unity", "C#", "2D Game Development"],
     image: "/img/numeninthesewers.png",
     imageAlt: "Numen in the Sewers game title artwork",
@@ -101,6 +120,9 @@ const projects: Project[] = [
     meta: "Personal Project | 2025 - 2026",
     description:
       "Developed a web-based AI platform that brings multiple AI models into one host application for centralized, intuitive AI-assisted tasks.",
+    concept: "A unified assistant workspace that keeps multiple AI tools feeling organized instead of scattered.",
+    tools: "HTML, Tailwind, JavaScript, PHP",
+    timeSpent: "Ongoing",
     tags: ["HTML5", "Tailwind", "JavaScript", "PHP"],
     image: "/img/SHN.png",
     imageAlt: "SHN AI platform interface preview",
@@ -111,6 +133,9 @@ const projects: Project[] = [
     meta: "Personal Project | 2025 - 2026",
     description:
       "Created a Google-authenticated image resizing app with real-time previews, original-versus-resized comparison, and processed image downloads.",
+    concept: "A lightweight utility interface for creators who need quick image resizing with visual confidence before download.",
+    tools: "HTML, CSS, JavaScript, Firebase, OAuth",
+    timeSpent: "2 weeks",
     tags: ["HTML5", "OAuth", "CSS3", "Firebase", "JavaScript", "Google"],
     image: "/img/RESIZE.png",
     imageAlt: "Resize image compressor application preview",
@@ -121,9 +146,46 @@ const projects: Project[] = [
     meta: "Capstone Project | 2025 - 2026",
     description:
       "Built a school information system capstone covering learner records, enrollment workflows, attendance, grades, report cards, analytics, and role-based access.",
+    concept: "A school operations system shaped around registrar, teacher, and adviser workflows with practical reporting outputs.",
+    tools: "PHP, MySQL, JavaScript, Bootstrap",
+    timeSpent: "Capstone cycle",
     tags: ["PHP", "MySQL", "JavaScript", "Bootstrap", "System Development"],
     image: "/img/gsis.png",
     imageAlt: "GSIS capstone login screen preview",
+  },
+  {
+    number: "08",
+    title: "Interface Flow Studies",
+    meta: "Figma Prototype | Interface Flow",
+    description:
+      "Mapped user paths, screen states, and priority actions through a Figma prototype before committing major system pages to code.",
+    concept: "Exploring how users move through forms, dashboards, and records while keeping the interface path clear.",
+    tools: "Figma, wireframes, layout planning",
+    timeSpent: "Ongoing",
+    tags: ["Figma", "UX Flow", "Prototype"],
+    image: "/img/prototype.png",
+    imageAlt: "Figma interface flow prototype preview",
+  },
+];
+
+const processSteps = [
+  {
+    title: "Collect",
+    description:
+      "I start by gathering references, requirements, sketches, screenshots, and constraints so the work has a clear direction before design choices get polished.",
+    icon: Layers3,
+  },
+  {
+    title: "Shape",
+    description:
+      "I turn ideas into wireframes, interface states, gameplay tests, or rough layouts, then compare what feels useful, readable, and visually balanced.",
+    icon: Palette,
+  },
+  {
+    title: "Refine",
+    description:
+      "I build the final version, test the details, adjust spacing and interaction, and prepare the piece with a short caption and clean presentation.",
+    icon: Sparkles,
   },
 ];
 
@@ -612,7 +674,7 @@ export default function PortfolioShell() {
                 </span>
                 <br />
                 <span className="hero-line hero-line--3 text-white" data-aos="fade-up" data-aos-delay="190">
-                  a Student
+                  a Creative
                 </span>
                 <br />
                 <span className="hero-line hero-line--4 text-white/25" data-aos="fade-up" data-aos-delay="260">
@@ -625,7 +687,7 @@ export default function PortfolioShell() {
                 data-aos-delay="340"
               >
                 <p className="max-w-md text-sm font-light leading-7 text-white/35">
-                  Building practical systems, interfaces, and digital experiences with a focus on useful details.
+                  Curating interfaces, systems, and game experiments that combine practical function with visual direction.
                 </p>
               </div>
             </div>
@@ -667,8 +729,9 @@ export default function PortfolioShell() {
 
         <section id="about" className="section-space site-container">
           <SectionHeading
-            title="System development, with a human edge."
-            description="Fourth-year PHINMA COC student now specializing in Digital Arts, with a strong foundation in system development, Unity game development, and modern web technologies."
+            label="Artist Statement"
+            title="Practical systems, shaped with visual care."
+            description="I create digital work that sits between system development and visual design: interfaces, web applications, game experiments, and creative tools that are useful first, then refined through mood, spacing, motion, and clear presentation."
           />
 
           <div className="grid gap-10 md:grid-cols-3">
@@ -685,7 +748,7 @@ export default function PortfolioShell() {
                 <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Build</p>
                 <h3 className="text-xl font-light tracking-[-0.03em] text-white">Full Stack Development</h3>
                 <p className="mt-3 text-sm font-light leading-relaxed text-white/45">
-                  Built e-commerce platforms, POS systems, and full-scale academic systems with both front-end and back-end development.
+                  I build complete web systems while paying attention to layout, readability, interaction flow, and the small details that make a screen easier to trust.
                 </p>
               </article>
             </Parallax>
@@ -703,7 +766,7 @@ export default function PortfolioShell() {
                 <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Learn</p>
                 <h3 className="text-xl font-light tracking-[-0.03em] text-white">Technical Skills</h3>
                 <p className="mt-3 text-sm font-light leading-relaxed text-white/45">
-                  Proficient in modern web technologies, database design, and system development with continuous learning in cloud and game development.
+                  My work moves across web development, database design, game development, image tools, and digital arts, giving the portfolio a range of technical and visual studies.
                 </p>
               </article>
             </Parallax>
@@ -721,7 +784,7 @@ export default function PortfolioShell() {
                 <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Collaborate</p>
                 <h3 className="text-xl font-light tracking-[-0.03em] text-white">Team Collaboration</h3>
                 <p className="mt-3 text-sm font-light leading-relaxed text-white/45">
-                  Experienced in team problem-solving, having worked as Group System Programmer managing coding and database tasks.
+                  I document ideas through screenshots, prototypes, and concise project notes so the final work shows both the result and the thinking behind it.
                 </p>
               </article>
             </Parallax>
@@ -736,8 +799,9 @@ export default function PortfolioShell() {
 
         <section id="projects" className="section-space site-container">
           <SectionHeading
-            title="PROJECTS"
-            description="Showcasing Real-world projects in system development."
+            label="Selected Works"
+            title="A curated set of eight works."
+            description="Eight selected pieces showing range across web systems, interface design, image tools, game development, capstone work, and process studies."
           />
 
           <div className="project-showcase">
@@ -791,6 +855,20 @@ export default function PortfolioShell() {
                       {project.title}
                     </h3>
                     <p className="mt-5 max-w-xl text-sm font-light leading-7 text-white/45 md:text-[15px] md:leading-8">{project.description}</p>
+                    <dl className="creative-caption mt-6 grid gap-3 text-sm text-white/40 sm:grid-cols-3">
+                      <div>
+                        <dt>Concept</dt>
+                        <dd>{project.concept}</dd>
+                      </div>
+                      <div>
+                        <dt>Tools</dt>
+                        <dd>{project.tools}</dd>
+                      </div>
+                      <div>
+                        <dt>Time</dt>
+                        <dd>{project.timeSpent}</dd>
+                      </div>
+                    </dl>
                     <div className="mt-7 flex flex-wrap gap-1.5">
                       {project.tags.map((tag) => (
                         <span
@@ -804,6 +882,50 @@ export default function PortfolioShell() {
                   </div>
                 </article>
             ))}
+          </div>
+        </section>
+
+        {/* ---------------------------------------------------------- */}
+        {/*  Process                                                    */}
+        {/* ---------------------------------------------------------- */}
+
+        <div className="section-divider" />
+
+        <section id="process" className="section-space site-container">
+          <SectionHeading
+            label="Process Work"
+            title="From rough direction to finished screen."
+            description="Each selected work is presented as more than a screenshot: the idea, tools, and time spent are included so the portfolio shows creative decisions as well as final output."
+          />
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {processSteps.map((step, index) => {
+              const Icon = step.icon;
+
+              return (
+                <Parallax speed={0.016 + index * 0.006} key={step.title}>
+                  <article
+                    className="process-panel reveal h-full p-6 md:p-7"
+                    data-aos="fade-up"
+                    data-aos-delay={index * 90}
+                    data-aos-duration="700"
+                  >
+                    <div className="mb-8 flex h-10 w-10 items-center justify-center border border-white/[0.08] text-white/45">
+                      <Icon size={18} strokeWidth={1.25} />
+                    </div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
+                      0{index + 1}
+                    </p>
+                    <h3 className="mt-3 text-2xl font-light tracking-[-0.04em] text-white">
+                      {step.title}
+                    </h3>
+                    <p className="mt-4 text-sm font-light leading-7 text-white/40">
+                      {step.description}
+                    </p>
+                  </article>
+                </Parallax>
+              );
+            })}
           </div>
         </section>
 

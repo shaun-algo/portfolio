@@ -483,6 +483,43 @@ body {
   min-width: 0;
 }
 
+.creative-caption {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1.25rem;
+}
+
+.creative-caption dt {
+  margin-bottom: 0.45rem;
+  color: rgba(255, 255, 255, 0.28);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.creative-caption dd {
+  margin: 0;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.process-panel {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)),
+    rgba(255, 255, 255, 0.02);
+  transition: border-color 250ms ease, background 250ms ease, transform 250ms ease;
+}
+
+.process-panel:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.022)),
+    rgba(255, 255, 255, 0.025);
+}
+
 .project-display [data-aos="fade-right"] {
   transform: translate3d(-8rem, 0, 0);
 }
