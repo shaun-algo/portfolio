@@ -188,27 +188,26 @@
         </div>
         <div class="projects-grid">
             <div class="project-card" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
-                <div class="project-image"><img src="img/Clenro.png" alt="E-commerce Platform - Belono-ac Store"></div>
+                <div class="project-image">🛒</div>
                 <div class="project-content">
-                    <h3 class="project-title">Clenro Environmental Permit and Compliance</h3>
+                    <h3 class="project-title">E-commerce Platform - Belono-ac Store</h3>
                     <p class="project-description">
-                        Ongoing development of a dynamic clearance permit and compliance platform for Clenro.
+                        Built a complete e-commerce website with shopping cart, product management, and payment integration using front-end and back-end technologies with database management.
                     </p>
                     <div class="project-tags">
                         <span class="project-tag">HTML/CSS</span>
                         <span class="project-tag">PHP</span>
-                         <span class="project-tag">JavaScript</span>
                         <span class="project-tag">Database Design</span>
                         <span class="project-tag">Bootstrap</span>
                     </div>
                     <div class="project-links">
-                        <a aria-disabled="true" class="project-link">Live Demo</a>
-                        <a aria-disabled="true" class="project-link">GitHub</a>
+                        <a href="#" class="project-link">Live Demo</a>
+                        <a href="#" class="project-link">GitHub</a>
                     </div>
                 </div>
             </div>
             <div class="project-card" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
-                <div class="project-image"><img src="img/HospitalBilling.png" alt="Hospital Billing System"></div>
+                <div class="project-image">�</div>
                 <div class="project-content">
                     <h3 class="project-title">Hospital Billing System</h3>
                     <p class="project-description">
@@ -220,13 +219,13 @@
                         <span class="project-tag">Team Collaboration</span>
                     </div>
                     <div class="project-links">
-                        <a aria-disabled="true" href="#" class="project-link">Live Demo</a>
-                        <a aria-disabled="true" href="#" class="project-link">GitHub</a>
+                        <a href="#" class="project-link">Live Demo</a>
+                        <a href="#" class="project-link">GitHub</a>
                     </div>
                 </div>
             </div>
             <div class="project-card" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
-                <div class="project-image"><img src="img/POS.png" alt="Point of Sale (POS) System"></div>
+                <div class="project-image">�</div>
                 <div class="project-content">
                     <h3 class="project-title">Point of Sale (POS) System</h3>
                     <p class="project-description">
@@ -238,8 +237,8 @@
                         <span class="project-tag">MySQL</span>
                     </div>
                     <div class="project-links">
-                        <a aria-disabled="true" href="#" class="project-link">Live Demo</a>
-                        <a aria-disabled="true" href="#" class="project-link">GitHub</a>
+                        <a href="#" class="project-link">Live Demo</a>
+                        <a href="#" class="project-link">GitHub</a>
                     </div>
                 </div>
             </div>
@@ -523,20 +522,7 @@
                 event.stopPropagation();
             }
 
-            const resumePath = 'img/Black and White Clean Professional A4 Resume.pdf';
-            const encodedResumePath = encodeURI(resumePath);
-
-            // Fallback download if SweetAlert2 fails to load
-            if (typeof Swal === 'undefined') {
-                const fallbackLink = document.createElement('a');
-                fallbackLink.href = encodedResumePath;
-                fallbackLink.download = 'Shaun_Belono-ac_Resume.pdf';
-                document.body.appendChild(fallbackLink);
-                fallbackLink.click();
-                fallbackLink.remove();
-                return false;
-            }
-
+            // Save current scroll position
             const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
 
             Swal.fire({
@@ -550,33 +536,31 @@
                 color: '#ffffff',
                 confirmButtonColor: '#ffffff',
                 cancelButtonColor: 'transparent',
-                allowOutsideClick: true,
-                allowEscapeKey: true,
-                focusConfirm: false,
                 customClass: {
                     popup: 'swal-custom-popup',
                     confirmButton: 'swal-confirm-btn',
                     cancelButton: 'swal-cancel-btn'
                 },
                 didOpen: () => {
+                    // Prevent scroll when modal opens
                     window.scrollTo(0, scrollPosition);
                 },
                 willClose: () => {
+                    // Restore scroll position when modal closes
                     window.scrollTo(0, scrollPosition);
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const link = document.createElement('a');
-                    link.href = encodedResumePath;
+                    link.href = 'img/Black and White Clean Professional A4 Resume.pdf';
                     link.download = 'Shaun_Belono-ac_Resume.pdf';
-                    document.body.appendChild(link);
                     link.click();
-                    link.remove();
                 }
-                requestAnimationFrame(() => window.scrollTo(0, scrollPosition));
+                // Ensure scroll position is maintained after modal closes
+                setTimeout(() => {
+                    window.scrollTo(0, scrollPosition);
+                }, 0);
             });
-
-            return false;
         }
 
         // Close menu when clicking on a link
