@@ -1,11 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import Script from "next/script";
-import { FormEvent, HTMLAttributes, useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import type { FormEvent } from "react";
+import type { Variants } from "framer-motion";
 import {
   ArrowDownRight,
   ArrowUp,
+  ChevronDown,
   Code2,
   Download,
   Github,
@@ -43,16 +53,6 @@ type Project = {
   imageAlt?: string;
 };
 
-type RellaxConstructor = new (
-  selector: string,
-  options?: {
-    center?: boolean;
-    round?: boolean;
-    vertical?: boolean;
-    horizontal?: boolean;
-  },
-) => { destroy: () => void; refresh?: () => void };
-
 const navItems = [
   ["about", "About"],
   ["projects", "Projects"],
@@ -63,7 +63,7 @@ const navItems = [
 
 const projects: Project[] = [
   {
-    number: "01",
+    number: "",
     title: "GlowAura",
     meta: "E-commerce Project | 2024",
     description:
@@ -76,7 +76,7 @@ const projects: Project[] = [
     imageAlt: "GlowAura fragrance and beauty website preview",
   },
   {
-    number: "02",
+    number: "",
     title: "Hospital Billing System",
     meta: "Academic System Project | 2024 - 2025",
     description:
@@ -89,7 +89,7 @@ const projects: Project[] = [
     imageAlt: "Hospital billing system project preview",
   },
   {
-    number: "03",
+    number: "",
     title: "Point of Sale (POS) System",
     meta: "Retail System Project | 2025",
     description:
@@ -102,7 +102,7 @@ const projects: Project[] = [
     imageAlt: "Point of sale system project preview",
   },
   {
-    number: "04",
+    number: "",
     title: "Numen in the Sewers",
     meta: "Game Development Project | 2026",
     description:
@@ -115,7 +115,7 @@ const projects: Project[] = [
     imageAlt: "Numen in the Sewers game title artwork",
   },
   {
-    number: "05",
+    number: "",
     title: "SHN",
     meta: "Personal Project | 2025 - 2026",
     description:
@@ -128,7 +128,7 @@ const projects: Project[] = [
     imageAlt: "SHN AI platform interface preview",
   },
   {
-    number: "06",
+    number: "",
     title: "Resize",
     meta: "Personal Project | 2025 - 2026",
     description:
@@ -141,7 +141,7 @@ const projects: Project[] = [
     imageAlt: "Resize image compressor application preview",
   },
   {
-    number: "07",
+    number: "",
     title: "GSIS",
     meta: "Capstone Project | 2025 - 2026",
     description:
@@ -154,7 +154,7 @@ const projects: Project[] = [
     imageAlt: "GSIS capstone login screen preview",
   },
   {
-    number: "08",
+    number: "",
     title: "Interface Flow Studies",
     meta: "Figma Prototype | Interface Flow",
     description:
@@ -172,19 +172,19 @@ const processSteps = [
   {
     title: "Collect",
     description:
-      "I start by gathering references, requirements, sketches, screenshots, and constraints so the work has a clear direction before design choices get polished.",
+      "Initialize by gathering references, requirements, sketches, screenshots, and constraints, deeply figure every problem based on client's needs, or independently identify transactional gapses for start ups, so the work has a clear direction before design choices get polished.",
     icon: Layers3,
   },
   {
     title: "Shape",
     description:
-      "I turn ideas into wireframes, interface states, gameplay tests, or rough layouts, then compare what feels useful, readable, and visually balanced.",
+      "Move all ideas into wireframes, interface states, or rough layouts, Visualizing the essential elements to include in features based on the collected information, then compare what feels useful, readable, and visually balanced.",
     icon: Palette,
   },
   {
     title: "Refine",
     description:
-      "I build the final version, test the details, adjust spacing and interaction, and prepare the piece with a short caption and clean presentation.",
+      "Producing the final version, test the details even the tiniest ones, adjust for efficient interactions, and prepare the piece with a nice documentation and clean presentation.",
     icon: Sparkles,
   },
 ];
@@ -194,7 +194,7 @@ const milestones = [
     year: "2026 — 2027",
     title: "Specialization in Digital Arts",
     description:
-      "PHINMA Cagayan de Oro College — Now a fourth-year student specializing in Digital Arts, strengthening visual design, creative direction, and multimedia skills alongside a system development foundation.",
+      "PHINMA Cagayan de Oro College — Fourth-year student specializing in Digital Arts, strengthening visual design, creative direction, and multimedia skills alongside a system development foundation.",
   },
   {
     year: "2025 — 2026",
@@ -217,6 +217,7 @@ const milestones = [
 ];
 
 const resumePath = "/resume.pdf";
+const smoothEase = [0.22, 1, 0.36, 1] as const;
 
 /* ------------------------------------------------------------------ */
 /*  Sub-components                                                     */
@@ -227,49 +228,184 @@ function SectionHeading({
   title,
   description,
   speed = 0.03,
+  animatedTitle = true,
+  align = "left",
+  revealDirection = "up",
 }: {
   label?: string;
   title: string;
   description: string;
   speed?: number;
+  animatedTitle?: boolean;
+  align?: "left" | "center";
+  revealDirection?: "up" | "down" | "left" | "right" | "none" | "center";
 }) {
+  const isCentered = align === "center";
+
   return (
     <Parallax speed={speed}>
-      <div className="mb-16 max-w-3xl reveal" data-aos="fade-up" data-aos-duration="700">
+      <MotionReveal
+        className={`mb-16 max-w-3xl ${isCentered ? "mx-auto text-center" : ""}`}
+        direction={revealDirection}
+        amount={0.36}
+      >
         {label && <span className="eyebrow mb-5">{label}</span>}
-        <h2 className="text-balance text-4xl font-extralight tracking-[-0.06em] text-white sm:text-5xl md:text-7xl">
-          {title}
-        </h2>
-        <p className="mt-6 max-w-xl text-[15px] font-light leading-8 text-white/40">
+        {animatedTitle ? (
+          <KineticTypingTitle text={title} />
+        ) : (
+          <h2 className="premium-title text-balance text-4xl font-extralight tracking-[-0.06em] sm:text-5xl md:text-7xl">
+            {title}
+          </h2>
+        )}
+        <p className={`narrative-text mt-6 max-w-xl text-[15px] font-light leading-8 text-white/40 ${isCentered ? "mx-auto" : ""}`}>
           {description}
         </p>
-      </div>
+      </MotionReveal>
     </Parallax>
+  );
+}
+
+function KineticTypingTitle({ text }: { text: string }) {
+  const reduceMotion = useReducedMotion();
+  const words = text.split(" ");
+  let characterIndex = 0;
+  const containerVariants: Variants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.028,
+        delayChildren: 0.08,
+      },
+    },
+  };
+  const characterVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: "0.55em",
+      rotateX: -62,
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      transition: {
+        type: "spring",
+        stiffness: 150,
+        damping: 20,
+        mass: 0.72,
+      },
+    },
+  };
+
+  return (
+    <motion.h2
+      className="kinetic-type-title text-balance text-4xl font-extralight text-white sm:text-5xl md:text-7xl"
+      initial={reduceMotion ? false : { opacity: 0.72 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.7, ease: smoothEase }}
+      viewport={{ once: true, amount: 0.72 }}
+      aria-label={text}
+    >
+      <motion.span
+        className="kinetic-type-display"
+        initial={reduceMotion ? false : "hidden"}
+        whileInView="show"
+        variants={containerVariants}
+        viewport={{ once: true, amount: 0.72 }}
+        aria-hidden="true"
+      >
+        {words.map((word, wordIndex) => (
+          <span className="kinetic-word" key={`${word}-${wordIndex}`}>
+            {Array.from(word).map((character) => {
+              const index = characterIndex;
+              characterIndex += 1;
+
+              return (
+                <motion.span
+                  className="kinetic-char"
+                  key={`${character}-${index}`}
+                  variants={characterVariants}
+                >
+                  {character}
+                </motion.span>
+              );
+            })}
+          </span>
+        ))}
+      </motion.span>
+    </motion.h2>
   );
 }
 
 function Parallax({
   children,
-  speed = 0.04,
   className = "",
-  ...props
+  "aria-hidden": ariaHidden,
 }: {
   children?: React.ReactNode;
   speed?: number;
   className?: string;
-} & HTMLAttributes<HTMLDivElement>) {
-  const rellaxSpeed = Math.max(-2.4, Math.min(2.4, speed * 100));
-
+  "aria-hidden"?: boolean | "true" | "false";
+}) {
   return (
-    <div
-      className={`rellax parallax-soft ${className}`}
-      data-rellax-percentage="0.5"
-      data-rellax-speed={rellaxSpeed.toFixed(1)}
-      {...props}
-    >
+    <div className={`parallax-soft ${className}`} aria-hidden={ariaHidden}>
       {children}
     </div>
   );
+}
+
+function MotionReveal({
+  children,
+  className = "",
+  delay = 0,
+  direction = "up",
+  amount = 0.24,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+  delay?: number;
+  direction?: "up" | "down" | "left" | "right" | "none" | "center";
+  amount?: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const isWideViewport = useIsWideViewport();
+  const sideDistance = isWideViewport ? 96 : 18;
+  const offsets = {
+    up: { x: 0, y: 34 },
+    down: { x: 0, y: -34 },
+    left: { x: sideDistance, y: 18 },
+    right: { x: -sideDistance, y: 18 },
+    none: { x: 0, y: 0 },
+    center: { x: 0, y: 28, scale: 0.96 },
+  }[direction];
+
+  return (
+    <motion.div
+      className={className}
+      initial={reduceMotion ? false : { opacity: 0, ...offsets }}
+      whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+      viewport={{ once: true, amount }}
+      transition={{ duration: 0.78, delay, ease: smoothEase }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function useIsWideViewport() {
+  const [isWideViewport, setIsWideViewport] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const syncViewport = () => setIsWideViewport(mediaQuery.matches);
+
+    syncViewport();
+    mediaQuery.addEventListener("change", syncViewport);
+
+    return () => mediaQuery.removeEventListener("change", syncViewport);
+  }, []);
+
+  return isWideViewport;
 }
 
 function ArrowLink({ children, href }: { children: React.ReactNode; href: string }) {
@@ -286,33 +422,47 @@ function ArrowLink({ children, href }: { children: React.ReactNode; href: string
 /* ------------------------------------------------------------------ */
 
 function Timeline() {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 82%", "end 32%"],
+  });
+  const rawScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const scaleY = useSpring(rawScaleY, { stiffness: 120, damping: 30, mass: 0.35 });
+
   return (
-    <div className="timeline relative mx-auto max-w-5xl">
-      <div className="timeline-line absolute bottom-5 left-3 top-5 w-px md:left-1/2 md:-translate-x-1/2" />
+    <div ref={ref} className="timeline relative mx-auto max-w-5xl">
+      <motion.div
+        className="timeline-line absolute bottom-5 left-3 top-5 w-px md:left-1/2 md:-translate-x-1/2"
+        style={{ scaleY: reduceMotion ? 1 : scaleY }}
+      />
       <div className="space-y-12 md:space-y-0">
         {milestones.map((milestone, index) => (
           <Parallax speed={index % 2 === 0 ? 0.02 : 0.032} key={milestone.year}>
-            <article
-              className={`relative flex pl-10 md:min-h-[190px] md:pl-0 ${
-                index % 2 === 0 ? "md:justify-start" : "md:justify-end"
-              }`}
-              data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
-              data-aos-duration="750"
-              data-aos-offset="60"
+            <MotionReveal
+              direction={index % 2 === 0 ? "right" : "left"}
+              amount={0.32}
             >
-              <div className="timeline-dot absolute left-[3px] top-2 h-2 w-2 rounded-full bg-white md:left-1/2 md:top-2 md:-translate-x-1/2" />
-              <div className="w-full py-1 md:w-[44%]">
-                <span className="inline-block font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-                  {milestone.year}
-                </span>
-                <h3 className="mt-2 text-xl font-light tracking-[-0.03em] text-white">
-                  {milestone.title}
-                </h3>
-                <p className="mt-3 text-sm font-light leading-relaxed text-white/45">
-                  {milestone.description}
-                </p>
-              </div>
-            </article>
+              <article
+                className={`relative flex pl-10 md:min-h-[190px] md:pl-0 ${
+                  index % 2 === 0 ? "md:justify-start" : "md:justify-end"
+                }`}
+              >
+                <div className="timeline-dot absolute left-[3px] top-2 h-2 w-2 rounded-full bg-white md:left-1/2 md:top-2 md:-translate-x-1/2" />
+                <div className="w-full py-1 md:w-[44%]">
+                  <span className="inline-block font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                    {milestone.year}
+                  </span>
+                  <h3 className="premium-title mt-2 text-xl font-light tracking-[-0.03em]">
+                    {milestone.title}
+                  </h3>
+                  <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
+                    {milestone.description}
+                  </p>
+                </div>
+              </article>
+            </MotionReveal>
           </Parallax>
         ))}
       </div>
@@ -353,6 +503,7 @@ function HeroGalaxy() {
     let width = 0;
     let height = 0;
     let frameId = 0;
+    let isVisible = true;
     let start = performance.now();
 
     const resize = () => {
@@ -372,12 +523,13 @@ function HeroGalaxy() {
     };
 
     const draw = (now: number) => {
+      frameId = 0;
       const elapsed = reduceMotion ? 0 : (now - start) / 1000;
       context.clearRect(0, 0, width, height);
 
-      const centerX = width * 0.28;
-      const centerY = height * 0.43;
-      const galaxyRadius = Math.min(width, height) * 0.52;
+      const centerX = width * 0.42;
+      const centerY = height * 0.54;
+      const galaxyRadius = Math.min(width, height) * 0.66;
 
       const coreGlow = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, galaxyRadius * 0.78);
       coreGlow.addColorStop(0, "rgba(255,255,255,0.20)");
@@ -389,8 +541,8 @@ function HeroGalaxy() {
 
       context.save();
       context.translate(centerX, centerY);
-      context.rotate(-0.18 + elapsed * 0.01);
-      context.scale(1.55, 0.54);
+      context.rotate(-0.12 + elapsed * 0.01);
+      context.scale(1.42, 0.66);
 
       for (const star of stars) {
         const armMotion = elapsed * star.drift;
@@ -414,27 +566,262 @@ function HeroGalaxy() {
       context.fillStyle = dust;
       context.fillRect(0, 0, width, height);
 
-      if (!reduceMotion) {
+      if (!reduceMotion && isVisible) {
         frameId = requestAnimationFrame(draw);
       }
     };
 
-    resize();
-    draw(start);
+    const handleResize = () => {
+      resize();
+      draw(performance.now());
+    };
 
-    window.addEventListener("resize", resize);
-    if (!reduceMotion) {
-      frameId = requestAnimationFrame(draw);
-    }
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !frameId && !reduceMotion) {
+          frameId = requestAnimationFrame(draw);
+        }
+        if (!isVisible) {
+          cancelAnimationFrame(frameId);
+          frameId = 0;
+        }
+      },
+      { rootMargin: "180px" },
+    );
+    observer.observe(canvas);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", handleResize);
+      observer.disconnect();
       cancelAnimationFrame(frameId);
       start = 0;
     };
   }, []);
 
   return <canvas ref={canvasRef} className="hero-galaxy" aria-hidden="true" />;
+}
+
+function ProcessGalaxy({ index }: { index: number }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const context = canvas.getContext("2d");
+    if (!context) return undefined;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const colors = ["176, 63, 79", "206, 210, 216", "210, 174, 238"];
+    const galaxyColor = colors[index % colors.length];
+    const stars = Array.from({ length: 96 }, (_, starIndex) => {
+      const arm = starIndex % 4;
+      const radius = Math.sqrt(Math.random()) * 0.5;
+      const angle = radius * 8.2 + arm * (Math.PI / 2) + (Math.random() - 0.5) * 1.36;
+
+      return {
+        radius,
+        angle,
+        size: Math.random() * 0.82 + 0.2,
+        alpha: Math.random() * 0.34 + 0.12,
+        drift: Math.random() * 0.12 + 0.025,
+        scatter: (Math.random() - 0.5) * 0.62,
+      };
+    });
+
+    let width = 0;
+    let height = 0;
+    let frameId = 0;
+    let start = performance.now();
+
+    const resize = () => {
+      const parent = canvas.parentElement;
+      const rect = parent?.getBoundingClientRect();
+      const nextWidth = Math.max(1, Math.floor(rect?.width ?? 360));
+      const nextHeight = Math.max(1, Math.floor(rect?.height ?? 360));
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+
+      width = nextWidth;
+      height = nextHeight;
+      canvas.width = Math.floor(width * ratio);
+      canvas.height = Math.floor(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+
+    const draw = (now: number) => {
+      frameId = 0;
+      const elapsed = reduceMotion ? 0 : (now - start) / 1000;
+      context.clearRect(0, 0, width, height);
+
+      const centerX = width * 0.5;
+      const centerY = height * 0.6;
+      const galaxyRadius = Math.min(width, height) * 0.54;
+
+      const coreGlow = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, galaxyRadius * 0.88);
+      coreGlow.addColorStop(0, `rgba(${galaxyColor},0.2)`);
+      coreGlow.addColorStop(0.28, `rgba(${galaxyColor},0.095)`);
+      coreGlow.addColorStop(0.62, `rgba(${galaxyColor},0.032)`);
+      coreGlow.addColorStop(1, "rgba(0,0,0,0)");
+      context.fillStyle = coreGlow;
+      context.fillRect(0, 0, width, height);
+
+      context.save();
+      context.translate(centerX, centerY);
+      context.rotate(-0.18 + index * 0.08 + elapsed * 0.012);
+      context.scale(1.08, 0.98);
+
+      for (const star of stars) {
+        const angle = star.angle + elapsed * star.drift;
+        const x = Math.cos(angle) * star.radius * galaxyRadius;
+        const y = Math.sin(angle) * star.radius * galaxyRadius + star.scatter * galaxyRadius * star.radius;
+        const twinkle = 0.75 + Math.sin(elapsed * 1.7 + star.angle * 3.2) * 0.25;
+
+        context.beginPath();
+        context.fillStyle = `rgba(${galaxyColor},${star.alpha * twinkle})`;
+        context.arc(x, y, star.size, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      context.restore();
+    };
+
+    const handleResize = () => {
+      resize();
+      draw(performance.now());
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(frameId);
+      start = 0;
+    };
+  }, [index]);
+
+  return <canvas ref={canvasRef} className="process-galaxy-canvas" aria-hidden="true" />;
+}
+
+function ContactPlanet() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const context = canvas.getContext("2d");
+    if (!context) return undefined;
+
+    let width = 0;
+    let height = 0;
+
+    const resize = () => {
+      const parent = canvas.parentElement;
+      const rect = parent?.getBoundingClientRect();
+      const nextWidth = Math.max(1, Math.floor(rect?.width ?? window.innerWidth));
+      const nextHeight = Math.max(1, Math.floor(rect?.height ?? window.innerHeight));
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+
+      width = nextWidth;
+      height = nextHeight;
+      canvas.width = Math.floor(width * ratio);
+      canvas.height = Math.floor(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+
+    const draw = () => {
+      context.clearRect(0, 0, width, height);
+
+      const isMobile = width < 700;
+      const centerX = width * (isMobile ? 0.68 : 0.78);
+      const centerY = height * (isMobile ? 0.5 : 0.48);
+      const radius = Math.min(isMobile ? width * 0.86 : height * 0.78, width * 0.6);
+
+      const atmosphere = context.createRadialGradient(centerX, centerY, radius * 0.76, centerX, centerY, radius * 1.32);
+      atmosphere.addColorStop(0, "rgba(98, 70, 150, 0)");
+      atmosphere.addColorStop(0.48, "rgba(112, 84, 178, 0.075)");
+      atmosphere.addColorStop(1, "rgba(92, 59, 160, 0)");
+      context.fillStyle = atmosphere;
+      context.fillRect(0, 0, width, height);
+
+      context.save();
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.clip();
+
+      const body = context.createRadialGradient(
+        centerX - radius * 0.5,
+        centerY - radius * 0.36,
+        radius * 0.08,
+        centerX + radius * 0.22,
+        centerY + radius * 0.18,
+        radius * 1.15,
+      );
+      body.addColorStop(0, "rgba(98, 82, 136, 0.32)");
+      body.addColorStop(0.32, "rgba(32, 24, 50, 0.76)");
+      body.addColorStop(0.68, "rgba(10, 8, 18, 0.96)");
+      body.addColorStop(1, "rgba(2, 2, 6, 1)");
+      context.fillStyle = body;
+      context.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+
+      context.restore();
+
+      const shadow = context.createRadialGradient(centerX + radius * 0.18, centerY + radius * 0.12, radius * 0.35, centerX, centerY, radius);
+      shadow.addColorStop(0, "rgba(0,0,0,0)");
+      shadow.addColorStop(0.62, "rgba(0,0,0,0.18)");
+      shadow.addColorStop(1, "rgba(0,0,0,0.68)");
+      context.fillStyle = shadow;
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      context.fill();
+
+      const rim = context.createLinearGradient(centerX - radius, centerY, centerX + radius, centerY);
+      rim.addColorStop(0, "rgba(215, 202, 255, 0.16)");
+      rim.addColorStop(0.36, "rgba(215, 202, 255, 0.045)");
+      rim.addColorStop(1, "rgba(215, 202, 255, 0)");
+      context.strokeStyle = rim;
+      context.lineWidth = Math.max(1, radius * 0.016);
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0.76 * Math.PI, 1.3 * Math.PI);
+      context.stroke();
+    };
+
+    const handleResize = () => {
+      resize();
+      draw();
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return (
+    <motion.div
+      className="contact-planet-layer"
+      initial={{ opacity: 0, y: 40, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.28 }}
+      transition={{ duration: 1.1, ease: smoothEase }}
+      aria-hidden="true"
+    >
+      <canvas ref={canvasRef} className="contact-planet-canvas" />
+    </motion.div>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -445,40 +832,30 @@ export default function PortfolioShell() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [resumeOpen, setResumeOpen] = useState(false);
   const [formSent, setFormSent] = useState(false);
-  const navRef = useRef<HTMLElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
-  const backToTopRef = useRef<HTMLButtonElement>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showHeroScrollCue, setShowHeroScrollCue] = useState(true);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const reduceMotion = useReducedMotion();
   const resumeFrameRef = useRef<HTMLIFrameElement>(null);
+  const { scrollY, scrollYProgress } = useScroll();
 
-  // Scroll tracking
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 36);
+    setShowHeroScrollCue(latest <= 4);
+    setShowBackToTop(latest > 500);
+  });
+
   useEffect(() => {
-    let frameId: number | null = null;
-
-    const updateChrome = () => {
-      frameId = null;
-      const scrollTop = window.scrollY;
-      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrollableHeight > 0 ? scrollTop / scrollableHeight : 0;
-
-      progressRef.current?.style.setProperty("--scroll-progress", `${progress}`);
-      navRef.current?.classList.toggle("is-scrolled", scrollTop > 36);
-      backToTopRef.current?.classList.toggle("is-visible", scrollTop > 500);
+    const syncScrollState = () => {
+      setIsScrolled(window.scrollY > 36);
+      setShowHeroScrollCue(window.scrollY <= 4);
+      setShowBackToTop(window.scrollY > 500);
     };
 
-    const handleScroll = () => {
-      if (frameId !== null) return;
-      frameId = requestAnimationFrame(updateChrome);
-    };
+    syncScrollState();
+    window.addEventListener("scroll", syncScrollState, { passive: true });
 
-    updateChrome();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-      if (frameId !== null) cancelAnimationFrame(frameId);
-    };
+    return () => window.removeEventListener("scroll", syncScrollState);
   }, []);
 
   // Lock body scroll when overlays open
@@ -516,70 +893,21 @@ export default function PortfolioShell() {
 
   return (
     <div className="page-shell">
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          (window as Window & { AOS?: { init: (options: Record<string, unknown>) => void } }).AOS?.init({
-            duration: 650,
-            easing: "ease-out-cubic",
-            once: true,
-            mirror: false,
-            offset: 80,
-            throttleDelay: 120,
-            debounceDelay: 80,
-            disableMutationObserver: true,
-            disable: () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-          });
-        }}
-      />
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          const typedWindow = window as Window & {
-            Rellax?: RellaxConstructor;
-            __portfolioRellax?: { destroy: () => void; refresh?: () => void };
-          };
-
-          if (
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-            window.matchMedia("(max-width: 767px)").matches
-          ) {
-            return;
-          }
-
-          typedWindow.__portfolioRellax?.destroy();
-          typedWindow.__portfolioRellax = typedWindow.Rellax
-            ? new typedWindow.Rellax(".rellax", {
-                center: true,
-                round: true,
-                vertical: true,
-                horizontal: false,
-              })
-            : undefined;
-
-          window.setTimeout(() => typedWindow.__portfolioRellax?.refresh?.(), 400);
-        }}
-      />
-
       {/* Background layers */}
       <div className="noise-overlay" aria-hidden="true" />
-      <div className="page-orbs" aria-hidden="true">
-        <span className="page-orb page-orb--1" />
-        <span className="page-orb page-orb--2" />
-        <span className="page-orb page-orb--3" />
-        <span className="page-orb page-orb--4" />
-      </div>
 
       {/* Scroll progress */}
-      <div ref={progressRef} className="scroll-progress" aria-hidden="true" />
+      <motion.div
+        className="scroll-progress"
+        style={{ scaleX: scrollYProgress }}
+        aria-hidden="true"
+      />
 
       {/* ============================================================ */}
       {/*  Navigation                                                   */}
       {/* ============================================================ */}
 
-      <header ref={navRef} className="site-nav">
+      <header className={`site-nav ${isScrolled ? "is-scrolled" : ""}`}>
         <div className="site-container flex h-[72px] items-center justify-between">
           <a
             href="#hero"
@@ -596,7 +924,7 @@ export default function PortfolioShell() {
               </a>
             ))}
             <button
-              className="resume-link ml-3 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]"
+              className="liquid-action resume-link ml-3 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em]"
               type="button"
               onClick={() => setResumeOpen(true)}
             >
@@ -629,7 +957,7 @@ export default function PortfolioShell() {
                 </a>
               ))}
               <button
-                className="mt-2 flex w-fit items-center gap-2 border border-white bg-white px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black"
+                className="liquid-action mt-2 flex w-fit items-center gap-2 px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.16em]"
                 type="button"
                 onClick={() => {
                   closeMenu();
@@ -654,50 +982,60 @@ export default function PortfolioShell() {
 
         <section id="hero" className="relative flex min-h-screen items-center overflow-hidden pt-20">
           <HeroGalaxy />
-          <div
-            className="site-container hero-scroll-layer rellax parallax-soft relative z-10 w-full pb-20 pt-16 md:pb-28 md:pt-20"
-            data-rellax-percentage="0.5"
-            data-rellax-speed="-1.2"
+          <Parallax
+            speed={-0.034}
+            className="site-container hero-scroll-layer relative z-10 w-full pb-20 pt-16 md:pb-28 md:pt-20"
           >
             <div className="max-w-5xl">
-              <p
+              <motion.p
                 className="mb-8 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/30 hero-line hero-line--1"
-                data-aos="fade-up"
-                data-aos-delay="50"
+                initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.76, delay: 0.08, ease: smoothEase }}
               >
                 <span className="h-px w-8 bg-white/20" />
                  Kibawe Bukidnon
-              </p>
+              </motion.p>
               <h1 className="hero-title">
-                <span className="hero-line hero-line--2" data-aos="fade-up" data-aos-delay="120">
+                <motion.span
+                  className="hero-line hero-line--2"
+                  initial={reduceMotion ? false : { opacity: 0, y: 42 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.86, delay: 0.18, ease: smoothEase }}
+                >
                   Zup! I&apos;m <span className="outline-name">Shaun</span>
-                </span>
+                </motion.span>
                 <br />
-                <span className="hero-line hero-line--3 text-white" data-aos="fade-up" data-aos-delay="190">
-                  a Creative
-                </span>
+                <motion.span
+                  className="hero-line hero-line--3 text-white"
+                  initial={reduceMotion ? false : { opacity: 0, y: 42 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.86, delay: 0.28, ease: smoothEase }}
+                >
+                  a Full Stack
+                </motion.span>
                 <br />
-                <span className="hero-line hero-line--4 text-white/25" data-aos="fade-up" data-aos-delay="260">
+                <motion.span
+                  className="hero-line hero-line--4 text-white/25"
+                  initial={reduceMotion ? false : { opacity: 0, y: 42 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.86, delay: 0.38, ease: smoothEase }}
+                >
                   Developer
-                </span>
+                </motion.span>
               </h1>
-              <div
-                className="mt-14 reveal reveal-stagger-5"
-                data-aos="fade-up"
-                data-aos-delay="340"
-              >
+              <MotionReveal className="mt-14" delay={0.48}>
                 <p className="max-w-md text-sm font-light leading-7 text-white/35">
-                  Curating interfaces, systems, and game experiments that combine practical function with visual direction.
+
                 </p>
-              </div>
+              </MotionReveal>
             </div>
-          </div>
+          </Parallax>
 
           {/* Hero image — parallax at different speed */}
-          <div
-            className="hero-image-layer rellax parallax-soft pointer-events-none absolute right-[-4rem] top-[4%] hidden h-[50rem] w-[40rem] lg:block 2xl:right-0 2xl:h-[58rem] 2xl:w-[48rem]"
-            data-rellax-percentage="0.45"
-            data-rellax-speed="-2"
+          <Parallax
+            speed={-0.052}
+            className="hero-image-layer pointer-events-none absolute right-[-4rem] top-[4%] hidden h-[50rem] w-[40rem] lg:block 2xl:right-0 2xl:h-[58rem] 2xl:w-[48rem]"
             aria-hidden="true"
           >
             {/* Floating dots instead of heavy orbit rings */}
@@ -715,7 +1053,27 @@ export default function PortfolioShell() {
                 priority
               />
             </div>
-          </div>
+          </Parallax>
+
+          <motion.a
+            className="liquid-scroll-cue absolute bottom-7 left-1/2 z-20 flex h-12 w-12 -translate-x-1/2 items-center justify-center"
+            href="#about"
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            animate={{
+              opacity: showHeroScrollCue ? 1 : 0,
+              y: showHeroScrollCue ? 0 : 14,
+              pointerEvents: showHeroScrollCue ? "auto" : "none",
+            }}
+            whileHover={reduceMotion ? undefined : { y: -2, scale: 1.03 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            transition={{
+              duration: showHeroScrollCue ? 0.34 : 0.24,
+              ease: smoothEase,
+            }}
+            aria-label="Scroll to about section"
+          >
+            <ChevronDown size={18} strokeWidth={1.6} />
+          </motion.a>
 
           {/* Bottom gradient fade */}
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--ink)] to-transparent" />
@@ -730,63 +1088,55 @@ export default function PortfolioShell() {
         <section id="about" className="section-space site-container">
           <SectionHeading
             label="Artist Statement"
-            title="Practical systems, shaped with visual care."
-            description="I create digital work that sits between system development and visual design: interfaces, web applications, game experiments, and creative tools that are useful first, then refined through mood, spacing, motion, and clear presentation."
+            title="Practical Development approach perceiption"
+            animatedTitle
+            description="I create digital work that sits between system development and visual design such as interfaces, web applications, 2d game components to production, and use tools that are useful, then refined through UI/UX principles."
           />
 
           <div className="grid gap-10 md:grid-cols-3">
             <Parallax speed={0.018}>
-              <article
-                className="py-2 reveal"
-                data-aos="fade-up"
-                data-aos-delay="0"
-                data-aos-duration="650"
-              >
-                <div className="mb-8 text-white/45">
-                  <Code2 size={28} strokeWidth={1} />
-                </div>
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Build</p>
-                <h3 className="text-xl font-light tracking-[-0.03em] text-white">Full Stack Development</h3>
-                <p className="mt-3 text-sm font-light leading-relaxed text-white/45">
-                  I build complete web systems while paying attention to layout, readability, interaction flow, and the small details that make a screen easier to trust.
-                </p>
-              </article>
+              <MotionReveal>
+                <article className="py-2">
+                  <div className="mb-8 text-white/45">
+                    <Code2 size={28} strokeWidth={1} />
+                  </div>
+                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Build</p>
+                  <h3 className="premium-title text-xl font-light tracking-[-0.03em]">Full Stack Development</h3>
+                  <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
+                    Flexibility in facing both Database layer and Application layer in an app systems while paying attention to visualization principles, such as,layout, readability, interaction flow, and the small details that make a screen easier to trust.
+                  </p>
+                </article>
+              </MotionReveal>
             </Parallax>
 
             <Parallax speed={0.028}>
-              <article
-                className="py-2 reveal"
-                data-aos="fade-up"
-                data-aos-delay="100"
-                data-aos-duration="650"
-              >
-                <div className="mb-8 text-white/45">
-                  <Zap size={28} strokeWidth={1} />
-                </div>
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Learn</p>
-                <h3 className="text-xl font-light tracking-[-0.03em] text-white">Technical Skills</h3>
-                <p className="mt-3 text-sm font-light leading-relaxed text-white/45">
-                  My work moves across web development, database design, game development, image tools, and digital arts, giving the portfolio a range of technical and visual studies.
-                </p>
-              </article>
+              <MotionReveal delay={0.08}>
+                <article className="py-2">
+                  <div className="mb-8 text-white/45">
+                    <Zap size={28} strokeWidth={1} />
+                  </div>
+                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Learn</p>
+                  <h3 className="premium-title text-xl font-light tracking-[-0.03em]">Technical Skills</h3>
+                  <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
+                    My work moves across web development, database design, game development, image tools, and digital arts, giving the good step of fundamental advantages in IT fields.
+                  </p>
+                </article>
+              </MotionReveal>
             </Parallax>
 
             <Parallax speed={0.022}>
-              <article
-                className="py-2 reveal"
-                data-aos="fade-up"
-                data-aos-delay="200"
-                data-aos-duration="650"
-              >
-                <div className="mb-8 text-white/45">
-                  <Users size={28} strokeWidth={1} />
-                </div>
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Collaborate</p>
-                <h3 className="text-xl font-light tracking-[-0.03em] text-white">Team Collaboration</h3>
-                <p className="mt-3 text-sm font-light leading-relaxed text-white/45">
-                  I document ideas through screenshots, prototypes, and concise project notes so the final work shows both the result and the thinking behind it.
-                </p>
-              </article>
+              <MotionReveal delay={0.16}>
+                <article className="py-2">
+                  <div className="mb-8 text-white/45">
+                    <Users size={28} strokeWidth={1} />
+                  </div>
+                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Collaborate</p>
+                  <h3 className="premium-title text-xl font-light tracking-[-0.03em]">Collaboration</h3>
+                  <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
+                    I document ideas based on different roles perceiption in development cycle, through a good sense of Data Gathering such as, related samples/templates, screenshots, prototypes, and concise project notes so the final work shows both the result and the thinking behind it, leading use to build an output that will run and solve certain problems.
+                  </p>
+                </article>
+              </MotionReveal>
             </Parallax>
           </div>
         </section>
@@ -800,28 +1150,29 @@ export default function PortfolioShell() {
         <section id="projects" className="section-space site-container">
           <SectionHeading
             label="Selected Works"
-            title="A curated set of eight works."
-            description="Eight selected pieces showing range across web systems, interface design, image tools, game development, capstone work, and process studies."
+            title="Projects"
+            align="center"
+            revealDirection="center"
+            description="Selected pieces showing range across web systems, interface design, image tools, game development, capstone work, and process studies."
           />
 
           <div className="project-showcase">
             {projects.map((project, idx) => (
               <article
-                className={`project-display reveal-stagger-${idx + 1} ${
+                className={`project-display ${
                   idx % 2 === 0 ? "lg:grid-cols-[1.12fr_0.88fr]" : "lg:grid-cols-[0.88fr_1.12fr]"
                 }`}
-                key={project.number}
+                key={`${project.title}-${idx}`}
               >
-                <div
-                  className={`project-media ${idx % 2 === 0 ? "lg:order-1" : "lg:order-2"}`}
-                  data-aos={idx % 2 === 0 ? "fade-right" : "fade-left"}
-                  data-aos-delay={idx * 40}
-                  data-aos-duration="850"
-                  data-aos-easing="ease-out-cubic"
-                  data-aos-offset="120"
+                <MotionReveal
+                  className={idx % 2 === 0 ? "lg:order-1" : "lg:order-2"}
+                  direction={idx % 2 === 0 ? "right" : "left"}
+                  delay={0.04}
+                  amount={0.2}
                 >
-                  {project.image ? (
-                    <div className="absolute inset-0">
+                  <div className="project-media">
+                    {project.image ? (
+                      <div className="absolute inset-0">
                         <Image
                           className="h-full w-full object-cover grayscale-[0.28]"
                           src={project.image}
@@ -829,36 +1180,35 @@ export default function PortfolioShell() {
                           fill
                           sizes="(max-width: 1024px) 100vw, 54vw"
                         />
-                    </div>
-                  ) : (
-                    <div className="flex h-full min-h-[15rem] flex-col items-center justify-center gap-3 text-white/20">
+                      </div>
+                    ) : (
+                      <div className="flex h-full min-h-[15rem] flex-col items-center justify-center gap-3 text-white/20">
                         <MonitorCog size={44} strokeWidth={0.7} />
                         <span className="max-w-[11rem] text-center font-mono text-[9px] uppercase tracking-[0.2em]">
                           {project.title}
                         </span>
-                    </div>
-                  )}
-                </div>
-                <div
+                      </div>
+                    )}
+                  </div>
+                </MotionReveal>
+                <MotionReveal
                   className={`project-info ${idx % 2 === 0 ? "lg:order-2 lg:pl-12" : "lg:order-1 lg:pr-12"}`}
-                  data-aos={idx % 2 === 0 ? "fade-left" : "fade-right"}
-                  data-aos-delay={idx * 40 + 80}
-                  data-aos-duration="850"
-                  data-aos-easing="ease-out-cubic"
-                  data-aos-offset="120"
+                  direction={idx % 2 === 0 ? "left" : "right"}
+                  delay={0.12}
+                  amount={0.24}
                 >
                     <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/25">
                       {project.number}
                     </span>
                     <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.16em] text-white/30">{project.meta}</p>
-                    <h3 className="mt-3 text-2xl font-light leading-tight tracking-[-0.04em] text-white md:text-4xl">
+                    <h3 className="premium-title mt-3 text-2xl font-light leading-tight tracking-[-0.04em] md:text-4xl">
                       {project.title}
                     </h3>
-                    <p className="mt-5 max-w-xl text-sm font-light leading-7 text-white/45 md:text-[15px] md:leading-8">{project.description}</p>
+                    <p className="narrative-text mt-5 max-w-xl text-sm font-light leading-7 text-white/45 md:text-[15px] md:leading-8">{project.description}</p>
                     <dl className="creative-caption mt-6 grid gap-3 text-sm text-white/40 sm:grid-cols-3">
                       <div>
                         <dt>Concept</dt>
-                        <dd>{project.concept}</dd>
+                        <dd className="narrative-text">{project.concept}</dd>
                       </div>
                       <div>
                         <dt>Tools</dt>
@@ -879,7 +1229,7 @@ export default function PortfolioShell() {
                         </span>
                       ))}
                     </div>
-                  </div>
+                </MotionReveal>
                 </article>
             ))}
           </div>
@@ -893,9 +1243,9 @@ export default function PortfolioShell() {
 
         <section id="process" className="section-space site-container">
           <SectionHeading
-            label="Process Work"
+            label="Process Work Approach"
             title="From rough direction to finished screen."
-            description="Each selected work is presented as more than a screenshot: the idea, tools, and time spent are included so the portfolio shows creative decisions as well as final output."
+            description=""
           />
 
           <div className="grid gap-8 md:grid-cols-3">
@@ -904,25 +1254,27 @@ export default function PortfolioShell() {
 
               return (
                 <Parallax speed={0.016 + index * 0.006} key={step.title}>
-                  <article
-                    className="process-panel reveal h-full p-6 md:p-7"
-                    data-aos="fade-up"
-                    data-aos-delay={index * 90}
-                    data-aos-duration="700"
-                  >
-                    <div className="mb-8 flex h-10 w-10 items-center justify-center border border-white/[0.08] text-white/45">
-                      <Icon size={18} strokeWidth={1.25} />
-                    </div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
-                      0{index + 1}
-                    </p>
-                    <h3 className="mt-3 text-2xl font-light tracking-[-0.04em] text-white">
-                      {step.title}
-                    </h3>
-                    <p className="mt-4 text-sm font-light leading-7 text-white/40">
-                      {step.description}
-                    </p>
-                  </article>
+                  <MotionReveal delay={index * 0.08}>
+                    <motion.article
+                      className={`process-galaxy process-galaxy--${index + 1} h-full px-1 py-10 md:px-2 md:py-12`}
+                      whileHover={reduceMotion ? undefined : { y: -6, scale: 1.01 }}
+                      transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.5 }}
+                    >
+                      <ProcessGalaxy index={index} />
+                      <div className="process-icon mb-8 flex h-10 w-10 items-center justify-center text-white/55">
+                        <Icon size={18} strokeWidth={1.25} />
+                      </div>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
+                        0{index + 1}
+                      </p>
+                      <h3 className="premium-title mt-3 text-2xl font-light tracking-[-0.04em]">
+                        {step.title}
+                      </h3>
+                      <p className="narrative-text mt-4 text-sm font-light leading-7 text-white/40">
+                        {step.description}
+                      </p>
+                    </motion.article>
+                  </MotionReveal>
                 </Parallax>
               );
             })}
@@ -930,7 +1282,7 @@ export default function PortfolioShell() {
         </section>
 
         {/* ---------------------------------------------------------- */}
-        {/*  Experience — Draw-on-scroll timeline                       */}
+        {/*  Experience — Framer timeline                                */}
         {/* ---------------------------------------------------------- */}
 
         <div className="section-divider" />
@@ -949,66 +1301,71 @@ export default function PortfolioShell() {
 
         <div className="section-divider" />
 
-        <section id="contact" className="section-space site-container">
-          <SectionHeading
-            title="Let&apos;s work together."
-            description=""
-          />
-          <div className="grid gap-14 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
-            <Parallax speed={0.024} className="reveal">
-              <p className="max-w-sm text-sm font-light leading-7 text-white/35">
-                Have an idea that needs a useful, considered digital home? Send a note and let&apos;s start a conversation.
-              </p>
-              <div className="mt-10 space-y-4 border-t border-white/[0.06] pt-6 text-sm text-white/45">
-                <a className="flex items-center gap-3 transition-colors hover:text-white" href="mailto:belonoacshaun@gmail.com">
-                  <Mail size={15} strokeWidth={1.3} /> belonoacshaun@gmail.com
-                </a>
-                <a className="flex items-center gap-3 transition-colors hover:text-white" href="tel:+639636147082">
-                  <Phone size={15} strokeWidth={1.3} /> +639-36-147-0082
-                </a>
-                <p className="flex items-center gap-3">
-                  <MapPin size={15} strokeWidth={1.3} /> Cagayan de Oro, Philippines
-                </p>
-              </div>
-            </Parallax>
+        <section id="contact" className="contact-abyss section-space">
+          <ContactPlanet />
+          <div className="site-container">
+            <SectionHeading
+              title="Let&apos;s work together."
+              description=""
+            />
+            <div className="grid gap-14 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
+              <Parallax speed={0.024}>
+                <MotionReveal>
+                  <p className="narrative-text max-w-sm text-sm font-light leading-7 text-white/35">
+                    Have an idea that needs a useful, considered digital home? Send a note and let&apos;s start a conversation.
+                  </p>
+                  <div className="mt-10 space-y-4 border-t border-white/[0.06] pt-6 text-sm text-white/45">
+                    <a className="flex items-center gap-3 transition-colors hover:text-white" href="mailto:belonoacshaun@gmail.com">
+                      <Mail size={15} strokeWidth={1.3} /> belonoacshaun@gmail.com
+                    </a>
+                    <a className="flex items-center gap-3 transition-colors hover:text-white" href="tel:+639636147082">
+                      <Phone size={15} strokeWidth={1.3} /> +639-36-147-0082
+                    </a>
+                    <p className="flex items-center gap-3">
+                      <MapPin size={15} strokeWidth={1.3} /> Cagayan de Oro, Philippines
+                    </p>
+                  </div>
+                </MotionReveal>
+              </Parallax>
 
-            <Parallax speed={0.016}>
-              <form
-                action="https://formspree.io/f/mzddyyoz"
-                method="POST"
-                className="surface-panel p-6 md:p-9 reveal"
-                data-aos="fade-left"
-                data-aos-duration="700"
-                onSubmit={handleContactSubmit}
-              >
-                <input type="hidden" name="_subject" value="New Portfolio Contact Form Submission" />
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <label className="block">
-                    <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Full name</span>
-                    <input className="form-field w-full px-4 py-3 text-sm" type="text" name="name" placeholder="Enter your name" required />
-                  </label>
-                  <label className="block">
-                    <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Email address</span>
-                    <input className="form-field w-full px-4 py-3 text-sm" type="email" name="_replyto" placeholder="your@email.com" required />
-                  </label>
-                </div>
-                <label className="mt-5 block">
-                  <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Subject</span>
-                  <input className="form-field w-full px-4 py-3 text-sm" type="text" name="subject" placeholder="Project inquiry" required />
-                </label>
-                <label className="mt-5 block">
-                  <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Message</span>
-                  <textarea className="form-field min-h-36 w-full resize-y px-4 py-3 text-sm" name="message" placeholder="Tell me about your project..." required />
-                </label>
-                <button
-                  className="mt-7 flex w-full items-center justify-center gap-3 border border-white bg-white px-5 py-3.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-black transition-colors hover:bg-transparent hover:text-white"
-                  type="submit"
-                >
-                  {formSent ? "Opening secure form…" : "Send message"}
-                  <Send size={14} strokeWidth={1.5} />
-                </button>
-              </form>
-            </Parallax>
+              <Parallax speed={0.016}>
+                <MotionReveal direction="left">
+                  <form
+                    action="https://formspree.io/f/mzddyyoz"
+                    method="POST"
+                    className="contact-form"
+                    onSubmit={handleContactSubmit}
+                  >
+                    <input type="hidden" name="_subject" value="New Portfolio Contact Form Submission" />
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <label className="block">
+                        <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Full name</span>
+                        <input className="form-field w-full px-4 py-3 text-sm" type="text" name="name" placeholder="Enter your name" required />
+                      </label>
+                      <label className="block">
+                        <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Email address</span>
+                        <input className="form-field w-full px-4 py-3 text-sm" type="email" name="_replyto" placeholder="your@email.com" required />
+                      </label>
+                    </div>
+                    <label className="mt-5 block">
+                      <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Subject</span>
+                      <input className="form-field w-full px-4 py-3 text-sm" type="text" name="subject" placeholder="Project inquiry" required />
+                    </label>
+                    <label className="mt-5 block">
+                      <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">Message</span>
+                      <textarea className="form-field min-h-36 w-full resize-y px-4 py-3 text-sm" name="message" placeholder="Tell me about your project..." required />
+                    </label>
+                    <button
+                      className="contact-submit mt-7 flex w-full items-center justify-center gap-3 px-5 py-3.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em]"
+                      type="submit"
+                    >
+                      {formSent ? "Submit Inquiry" : "Send message"}
+                      <Send size={14} strokeWidth={1.5} />
+                    </button>
+                  </form>
+                </MotionReveal>
+              </Parallax>
+            </div>
           </div>
         </section>
       </main>
@@ -1021,17 +1378,17 @@ export default function PortfolioShell() {
         <div className="site-container py-14">
           <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
             <div>
-              <p className="text-2xl font-extralight tracking-[-0.06em] text-white">
+              <p className="premium-title text-2xl font-extralight tracking-[-0.06em]">
                 Shn<span className="text-white/25">.</span>
               </p>
-              <p className="mt-3 max-w-xs text-sm font-light leading-7 text-white/30">
-                Full Stack Developer specializing in System Development and Modern Web Solutions
+              <p className="narrative-text mt-3 max-w-xs text-sm font-light leading-7 text-white/30">
+                Aspiring Full Stack Developer, currently specializing in System Development and Digital Arts
               </p>
               <div className="mt-5 flex gap-2">
                 <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="mailto:belonoacshaun1@gmail.com" aria-label="Email"><Mail size={14} /></a>
-                <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="https://github.com" aria-label="GitHub"><Github size={14} /></a>
-                <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="https://linkedin.com" aria-label="LinkedIn"><Linkedin size={14} /></a>
-                <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="https://instagram.com" aria-label="Instagram"><Instagram size={14} /></a>
+                <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="https://github.com/shaun-algo" aria-label="GitHub"><Github size={14} /></a>
+                <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="https://www.linkedin.com/in/shaun-michael-belonoac" aria-label="LinkedIn"><Linkedin size={14} /></a>
+                <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="https://www.instagram.com/shaunknowsthedrill_" aria-label="Instagram"><Instagram size={14} /></a>
               </div>
             </div>
             <div>
@@ -1062,15 +1419,21 @@ export default function PortfolioShell() {
       {/*  Back to top                                                  */}
       {/* ============================================================ */}
 
-      <button
-        ref={backToTopRef}
+      <motion.button
         type="button"
-        className="back-to-top fixed bottom-6 right-6 z-40 flex h-10 w-10 items-center justify-center border border-white/10 bg-black/70 text-white/70 transition-colors hover:border-white/40 hover:bg-white hover:text-black"
+        className="liquid-scroll-cue back-to-top fixed bottom-6 right-6 z-40 flex h-10 w-10 items-center justify-center"
+        initial={false}
+        animate={{
+          opacity: showBackToTop ? 1 : 0,
+          y: showBackToTop ? 0 : 10,
+          pointerEvents: showBackToTop ? "auto" : "none",
+        }}
+        transition={{ duration: 0.28, ease: smoothEase }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         aria-label="Back to top"
       >
         <ArrowUp size={16} strokeWidth={1.5} />
-      </button>
+      </motion.button>
 
       {/* ============================================================ */}
       {/*  Resume Modal                                                 */}
@@ -1083,17 +1446,17 @@ export default function PortfolioShell() {
           aria-modal="true"
           aria-labelledby="resume-title"
         >
-          <div className="resume-preview surface-panel flex w-full flex-col overflow-hidden">
-            <div className="resume-preview-header flex items-center justify-between gap-4 border-b border-white/[0.06] px-4 py-3 sm:px-5 sm:py-4 md:px-6">
+          <div className="resume-preview flex w-full flex-col overflow-hidden">
+            <div className="resume-preview-header flex items-center justify-between gap-4 px-4 py-3 sm:px-5 sm:py-4 md:px-6">
               <div className="min-w-0">
                 <span className="eyebrow mb-1">Preview</span>
-                <h2 id="resume-title" className="text-xl font-extralight tracking-[-0.04em] text-white">
+                <h2 id="resume-title" className="premium-title text-xl font-extralight tracking-[-0.04em]">
                   Resume
                 </h2>
               </div>
               <div className="resume-preview-actions flex shrink-0 items-center gap-2">
                 <button
-                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 text-white/55 transition-colors hover:border-white/30 hover:text-white"
+                  className="resume-action flex h-10 w-10 shrink-0 items-center justify-center"
                   type="button"
                   onClick={handleResumePrint}
                   aria-label="Print resume"
@@ -1102,7 +1465,7 @@ export default function PortfolioShell() {
                   <Printer size={16} strokeWidth={1.5} />
                 </button>
                 <a
-                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 text-white/55 transition-colors hover:border-white/30 hover:text-white"
+                  className="resume-action flex h-10 w-10 shrink-0 items-center justify-center"
                   href={resumePath}
                   download="Shaun_Belono-ac_Resume.pdf"
                   aria-label="Download resume"
@@ -1112,7 +1475,7 @@ export default function PortfolioShell() {
                 </a>
                 <button
                   type="button"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 text-white/55 transition-colors hover:border-white/30 hover:text-white"
+                  className="resume-action flex h-10 w-10 shrink-0 items-center justify-center"
                   onClick={() => setResumeOpen(false)}
                   aria-label="Close resume preview"
                   title="Close"
