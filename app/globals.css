@@ -396,7 +396,7 @@ body {
 .kinetic-char {
   display: inline-block;
   transform-origin: 50% 85%;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
   background:
     linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.84) 42%, rgba(255, 255, 255, 0.45) 100%),
     radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.52), transparent 38%);
@@ -478,9 +478,15 @@ body {
   backface-visibility: hidden;
 }
 
+.motion-reveal-target {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
 .parallax-soft {
   backface-visibility: hidden;
-  transform-style: preserve-3d;
+  transform: translateZ(0);
 }
 
 /* ================================================================== */
@@ -899,29 +905,9 @@ body {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
-
   .hero-scroll-layer {
     opacity: 1;
     will-change: auto;
-    transform: none !important;
-  }
-
-  .kinetic-type-display {
-    animation: none !important;
-  }
-
-  .kinetic-char {
-    opacity: 1 !important;
-    filter: none !important;
-    transform: none !important;
   }
 
   .liquid-scroll-cue svg {
@@ -986,12 +972,5 @@ body {
   .resume-preview-actions {
     width: 100%;
     justify-content: flex-end;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-scroll-layer,
-  .hero-line {
-    transform: none !important;
   }
 }

@@ -228,7 +228,7 @@ function useViewportReveal<T extends HTMLElement>(amount = 0.18) {
   const [fallbackInView, setFallbackInView] = useState(false);
 
   useEffect(() => {
-    if (reduceMotion || fallbackInView) return undefined;
+    if (fallbackInView) return undefined;
 
     const syncVisibility = () => {
       const element = ref.current;
@@ -244,21 +244,25 @@ function useViewportReveal<T extends HTMLElement>(amount = 0.18) {
     };
 
     syncVisibility();
+    const frameId = window.requestAnimationFrame(syncVisibility);
+    const timeoutId = window.setTimeout(syncVisibility, 360);
     window.addEventListener("scroll", syncVisibility, { passive: true });
     window.addEventListener("resize", syncVisibility);
     window.addEventListener("orientationchange", syncVisibility);
 
     return () => {
+      window.cancelAnimationFrame(frameId);
+      window.clearTimeout(timeoutId);
       window.removeEventListener("scroll", syncVisibility);
       window.removeEventListener("resize", syncVisibility);
       window.removeEventListener("orientationchange", syncVisibility);
     };
-  }, [fallbackInView, reduceMotion]);
+  }, [fallbackInView]);
 
   return {
     ref,
     reduceMotion,
-    shouldReveal: Boolean(reduceMotion || inView || fallbackInView),
+    shouldReveal: Boolean(inView || fallbackInView),
   };
 }
 
@@ -344,14 +348,14 @@ function KineticTypingTitle({ text }: { text: string }) {
     <motion.h2
       ref={ref}
       className="kinetic-type-title text-balance text-4xl font-extralight text-white sm:text-5xl md:text-7xl"
-      initial={reduceMotion ? false : { opacity: 0.72 }}
+      initial={{ opacity: 0.72 }}
       animate={{ opacity: shouldReveal ? 1 : 0.72 }}
       transition={{ duration: 0.7, ease: smoothEase }}
       aria-label={text}
     >
       <motion.span
         className="kinetic-type-display"
-        initial={reduceMotion ? false : "hidden"}
+        initial="hidden"
         animate={shouldReveal ? "show" : "hidden"}
         variants={containerVariants}
         aria-hidden="true"
@@ -424,8 +428,8 @@ function MotionReveal({
   return (
     <motion.div
       ref={ref}
-      className={className}
-      initial={reduceMotion ? false : { opacity: 0, ...offsets }}
+      className={`motion-reveal-target ${className}`}
+      initial={{ opacity: 0, ...offsets }}
       animate={shouldReveal ? { opacity: 1, x: 0, y: 0, scale: 1 } : { opacity: 0, ...offsets }}
       transition={{ duration: 0.78, delay, ease: smoothEase }}
     >
@@ -465,7 +469,6 @@ function ArrowLink({ children, href }: { children: React.ReactNode; href: string
 
 function Timeline() {
   const ref = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start 82%", "end 32%"],
@@ -477,7 +480,7 @@ function Timeline() {
     <div ref={ref} className="timeline relative mx-auto max-w-5xl">
       <motion.div
         className="timeline-line absolute bottom-5 left-3 top-5 w-px md:left-1/2 md:-translate-x-1/2"
-        style={{ scaleY: reduceMotion ? 1 : scaleY }}
+        style={{ scaleY }}
       />
       <div className="space-y-12 md:space-y-0">
         {milestones.map((milestone, index) => (
@@ -1133,7 +1136,7 @@ export default function PortfolioShell() {
             <div className="max-w-5xl">
               <motion.p
                 className="mb-8 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/30 hero-line hero-line--1"
-                initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.76, delay: 0.08, ease: smoothEase }}
               >
@@ -1143,7 +1146,7 @@ export default function PortfolioShell() {
               <h1 className="hero-title">
                 <motion.span
                   className="hero-line hero-line--2"
-                  initial={reduceMotion ? false : { opacity: 0, y: 42 }}
+                  initial={{ opacity: 0, y: 42 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.86, delay: 0.18, ease: smoothEase }}
                 >
@@ -1152,7 +1155,7 @@ export default function PortfolioShell() {
                 <br />
                 <motion.span
                   className="hero-line hero-line--3 text-white"
-                  initial={reduceMotion ? false : { opacity: 0, y: 42 }}
+                  initial={{ opacity: 0, y: 42 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.86, delay: 0.28, ease: smoothEase }}
                 >
@@ -1161,7 +1164,7 @@ export default function PortfolioShell() {
                 <br />
                 <motion.span
                   className="hero-line hero-line--4 text-white/25"
-                  initial={reduceMotion ? false : { opacity: 0, y: 42 }}
+                  initial={{ opacity: 0, y: 42 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.86, delay: 0.38, ease: smoothEase }}
                 >
@@ -1202,7 +1205,8 @@ export default function PortfolioShell() {
           <motion.a
             className="liquid-scroll-cue absolute bottom-7 left-1/2 z-20 flex h-12 w-12 -translate-x-1/2 items-center justify-center"
             href="#about"
-            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            tabIndex={0}
+            initial={{ opacity: 0, y: 16 }}
             animate={{
               opacity: showHeroScrollCue ? 1 : 0,
               y: showHeroScrollCue ? 0 : 14,
