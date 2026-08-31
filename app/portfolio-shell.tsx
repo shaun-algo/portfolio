@@ -616,7 +616,7 @@ function ProcessGalaxy({ index }: { index: number }) {
     if (!context) return undefined;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const colors = ["176, 63, 79", "206, 210, 216", "210, 174, 238"];
+    const colors = ["204, 74, 92", "226, 230, 236", "226, 190, 255"];
     const galaxyColor = colors[index % colors.length];
     const stars = Array.from({ length: 96 }, (_, starIndex) => {
       const arm = starIndex % 4;
@@ -626,8 +626,8 @@ function ProcessGalaxy({ index }: { index: number }) {
       return {
         radius,
         angle,
-        size: Math.random() * 0.82 + 0.2,
-        alpha: Math.random() * 0.34 + 0.12,
+        size: Math.random() * 0.94 + 0.24,
+        alpha: Math.random() * 0.46 + 0.2,
         drift: Math.random() * 0.12 + 0.025,
         scatter: (Math.random() - 0.5) * 0.62,
       };
@@ -661,12 +661,12 @@ function ProcessGalaxy({ index }: { index: number }) {
 
       const centerX = width * 0.5;
       const centerY = height * 0.6;
-      const galaxyRadius = Math.min(width, height) * 0.54;
+      const galaxyRadius = Math.min(width, height) * 0.58;
 
       const coreGlow = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, galaxyRadius * 0.88);
-      coreGlow.addColorStop(0, `rgba(${galaxyColor},0.2)`);
-      coreGlow.addColorStop(0.28, `rgba(${galaxyColor},0.095)`);
-      coreGlow.addColorStop(0.62, `rgba(${galaxyColor},0.032)`);
+      coreGlow.addColorStop(0, `rgba(${galaxyColor},0.27)`);
+      coreGlow.addColorStop(0.28, `rgba(${galaxyColor},0.13)`);
+      coreGlow.addColorStop(0.62, `rgba(${galaxyColor},0.052)`);
       coreGlow.addColorStop(1, "rgba(0,0,0,0)");
       context.fillStyle = coreGlow;
       context.fillRect(0, 0, width, height);
@@ -820,6 +820,106 @@ function ContactPlanet() {
       aria-hidden="true"
     >
       <canvas ref={canvasRef} className="contact-planet-canvas" />
+    </motion.div>
+  );
+}
+
+function ExperienceStars() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const context = canvas.getContext("2d");
+    if (!context) return undefined;
+
+    const stars = Array.from({ length: 62 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      size: Math.random() * 0.95 + 0.22,
+      alpha: Math.random() * 0.3 + 0.12,
+    }));
+    const fineStars = Array.from({ length: 92 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      size: Math.random() * 0.45 + 0.18,
+      alpha: Math.random() * 0.14 + 0.05,
+    }));
+
+    let width = 0;
+    let height = 0;
+
+    const resize = () => {
+      const parent = canvas.parentElement;
+      const rect = parent?.getBoundingClientRect();
+      const nextWidth = Math.max(1, Math.floor(rect?.width ?? window.innerWidth));
+      const nextHeight = Math.max(1, Math.floor(rect?.height ?? window.innerHeight));
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+
+      width = nextWidth;
+      height = nextHeight;
+      canvas.width = Math.floor(width * ratio);
+      canvas.height = Math.floor(height * ratio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    };
+
+    const drawStar = (star: { x: number; y: number; size: number; alpha: number }, tint = "244, 246, 255") => {
+      const x = star.x * width;
+      const y = star.y * height;
+      const glow = context.createRadialGradient(x, y, 0, x, y, star.size * 7);
+
+      glow.addColorStop(0, `rgba(${tint},${star.alpha})`);
+      glow.addColorStop(0.32, `rgba(${tint},${star.alpha * 0.32})`);
+      glow.addColorStop(1, `rgba(${tint},0)`);
+      context.fillStyle = glow;
+      context.beginPath();
+      context.arc(x, y, star.size * 7, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = `rgba(${tint},${Math.min(star.alpha + 0.18, 0.72)})`;
+      context.beginPath();
+      context.arc(x, y, star.size, 0, Math.PI * 2);
+      context.fill();
+    };
+
+    const draw = () => {
+      context.clearRect(0, 0, width, height);
+
+      const veil = context.createRadialGradient(width * 0.68, height * 0.3, 0, width * 0.68, height * 0.3, Math.min(width, height) * 0.82);
+      veil.addColorStop(0, "rgba(104, 92, 152, 0.075)");
+      veil.addColorStop(0.46, "rgba(42, 36, 70, 0.034)");
+      veil.addColorStop(1, "rgba(0, 0, 0, 0)");
+      context.fillStyle = veil;
+      context.fillRect(0, 0, width, height);
+
+      fineStars.forEach((star) => drawStar(star, "198, 204, 218"));
+      stars.forEach((star, index) => drawStar(star, index % 5 === 0 ? "218, 204, 255" : "245, 246, 250"));
+    };
+
+    const handleResize = () => {
+      resize();
+      draw();
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <motion.div
+      className="experience-stars-layer"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 0.7 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 1.05, ease: smoothEase }}
+      aria-hidden="true"
+    >
+      <canvas ref={canvasRef} className="experience-stars-canvas" />
     </motion.div>
   );
 }
@@ -1083,7 +1183,7 @@ export default function PortfolioShell() {
         {/*  About                                                      */}
         {/* ---------------------------------------------------------- */}
 
-        <div className="section-divider" />
+        <div className="section-divider section-divider-soft" />
 
         <section id="about" className="section-space site-container">
           <SectionHeading
@@ -1287,12 +1387,15 @@ export default function PortfolioShell() {
 
         <div className="section-divider" />
 
-        <section id="experience" className="section-space site-container">
-          <SectionHeading
-            title="The academic journey so far."
-            description=""
-          />
-          <Timeline />
+        <section id="experience" className="experience-stars-section section-space">
+          <ExperienceStars />
+          <div className="site-container">
+            <SectionHeading
+              title="The academic journey so far."
+              description=""
+            />
+            <Timeline />
+          </div>
         </section>
 
         {/* ---------------------------------------------------------- */}
