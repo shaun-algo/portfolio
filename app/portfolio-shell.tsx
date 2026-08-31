@@ -1103,7 +1103,7 @@ export default function PortfolioShell() {
                   <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Build</p>
                   <h3 className="premium-title text-xl font-light tracking-[-0.03em]">Full Stack Development</h3>
                   <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
-                    Flexibility in facing both Database layer and Application layer in an app systems while paying attention to visualization principles, such as,layout, readability, interaction flow, and the small details that make a screen easier to trust.
+                    Flexibility in facing both Database layer and Application layer in an app systems while paying attention to visualization principles, such as, layout, readability, interaction flow, and the small details that make a screen easier to trust.
                   </p>
                 </article>
               </MotionReveal>
