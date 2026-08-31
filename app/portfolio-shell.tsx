@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   motion,
   useMotionValueEvent,
+  useInView,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -218,6 +219,48 @@ const milestones = [
 
 const resumePath = "/resume.pdf";
 const smoothEase = [0.22, 1, 0.36, 1] as const;
+const softViewport = { once: true, amount: 0.18, margin: "0px 0px -10% 0px" } as const;
+
+function useViewportReveal<T extends HTMLElement>(amount = 0.18) {
+  const ref = useRef<T>(null);
+  const reduceMotion = useReducedMotion();
+  const inView = useInView(ref, { ...softViewport, amount });
+  const [fallbackInView, setFallbackInView] = useState(false);
+
+  useEffect(() => {
+    if (reduceMotion || fallbackInView) return undefined;
+
+    const syncVisibility = () => {
+      const element = ref.current;
+      if (!element) return;
+
+      const rect = element.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const isVisible = rect.top < viewportHeight * 0.9 && rect.bottom > viewportHeight * 0.08;
+
+      if (isVisible) {
+        setFallbackInView(true);
+      }
+    };
+
+    syncVisibility();
+    window.addEventListener("scroll", syncVisibility, { passive: true });
+    window.addEventListener("resize", syncVisibility);
+    window.addEventListener("orientationchange", syncVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", syncVisibility);
+      window.removeEventListener("resize", syncVisibility);
+      window.removeEventListener("orientationchange", syncVisibility);
+    };
+  }, [fallbackInView, reduceMotion]);
+
+  return {
+    ref,
+    reduceMotion,
+    shouldReveal: Boolean(reduceMotion || inView || fallbackInView),
+  };
+}
 
 /* ------------------------------------------------------------------ */
 /*  Sub-components                                                     */
@@ -266,7 +309,7 @@ function SectionHeading({
 }
 
 function KineticTypingTitle({ text }: { text: string }) {
-  const reduceMotion = useReducedMotion();
+  const { ref, reduceMotion, shouldReveal } = useViewportReveal<HTMLHeadingElement>(0.28);
   const words = text.split(" ");
   let characterIndex = 0;
   const containerVariants: Variants = {
@@ -299,19 +342,18 @@ function KineticTypingTitle({ text }: { text: string }) {
 
   return (
     <motion.h2
+      ref={ref}
       className="kinetic-type-title text-balance text-4xl font-extralight text-white sm:text-5xl md:text-7xl"
       initial={reduceMotion ? false : { opacity: 0.72 }}
-      whileInView={{ opacity: 1 }}
+      animate={{ opacity: shouldReveal ? 1 : 0.72 }}
       transition={{ duration: 0.7, ease: smoothEase }}
-      viewport={{ once: true, amount: 0.72 }}
       aria-label={text}
     >
       <motion.span
         className="kinetic-type-display"
         initial={reduceMotion ? false : "hidden"}
-        whileInView="show"
+        animate={shouldReveal ? "show" : "hidden"}
         variants={containerVariants}
-        viewport={{ once: true, amount: 0.72 }}
         aria-hidden="true"
       >
         {words.map((word, wordIndex) => (
@@ -367,7 +409,7 @@ function MotionReveal({
   direction?: "up" | "down" | "left" | "right" | "none" | "center";
   amount?: number;
 }) {
-  const reduceMotion = useReducedMotion();
+  const { ref, reduceMotion, shouldReveal } = useViewportReveal<HTMLDivElement>(amount);
   const isWideViewport = useIsWideViewport();
   const sideDistance = isWideViewport ? 96 : 18;
   const offsets = {
@@ -381,10 +423,10 @@ function MotionReveal({
 
   return (
     <motion.div
+      ref={ref}
       className={className}
       initial={reduceMotion ? false : { opacity: 0, ...offsets }}
-      whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      viewport={{ once: true, amount }}
+      animate={shouldReveal ? { opacity: 1, x: 0, y: 0, scale: 1 } : { opacity: 0, ...offsets }}
       transition={{ duration: 0.78, delay, ease: smoothEase }}
     >
       {children}
@@ -712,6 +754,7 @@ function ProcessGalaxy({ index }: { index: number }) {
 
 function ContactPlanet() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { ref, shouldReveal } = useViewportReveal<HTMLDivElement>(0.18);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -812,10 +855,10 @@ function ContactPlanet() {
 
   return (
     <motion.div
+      ref={ref}
       className="contact-planet-layer"
       initial={{ opacity: 0, y: 40, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.28 }}
+      animate={shouldReveal ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 40, scale: 0.96 }}
       transition={{ duration: 1.1, ease: smoothEase }}
       aria-hidden="true"
     >
@@ -826,6 +869,7 @@ function ContactPlanet() {
 
 function ExperienceStars() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { ref, shouldReveal } = useViewportReveal<HTMLDivElement>(0.18);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -912,10 +956,10 @@ function ExperienceStars() {
 
   return (
     <motion.div
+      ref={ref}
       className="experience-stars-layer"
       initial={{ opacity: 0 }}
-      whileInView={{ opacity: 0.7 }}
-      viewport={{ once: true, amount: 0.2 }}
+      animate={{ opacity: shouldReveal ? 0.7 : 0 }}
       transition={{ duration: 1.05, ease: smoothEase }}
       aria-hidden="true"
     >
