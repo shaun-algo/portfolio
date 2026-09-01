@@ -11,7 +11,6 @@ import {
   useTransform,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import type { FormEvent } from "react";
 import type { Variants } from "framer-motion";
 import {
   ArrowDownRight,
@@ -1338,7 +1337,6 @@ function ExperienceStars() {
 export default function PortfolioShell() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [resumeOpen, setResumeOpen] = useState(false);
-  const [formSent, setFormSent] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showHeroScrollCue, setShowHeroScrollCue] = useState(true);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -1384,12 +1382,6 @@ export default function PortfolioShell() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, []);
-
-  const handleContactSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFormSent(true);
-    event.currentTarget.submit();
-  };
 
   const handleResumePrint = () => {
     resumeFrameRef.current?.contentWindow?.focus();
@@ -1794,7 +1786,6 @@ export default function PortfolioShell() {
                     action="https://formspree.io/f/mzddyyoz"
                     method="POST"
                     className="contact-form"
-                    onSubmit={handleContactSubmit}
                   >
                     <input type="hidden" name="_subject" value="New Portfolio Contact Form Submission" />
                     <div className="grid gap-5 sm:grid-cols-2">
@@ -1819,7 +1810,7 @@ export default function PortfolioShell() {
                       className="contact-submit mt-7 flex w-full items-center justify-center gap-3 px-5 py-3.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em]"
                       type="submit"
                     >
-                      {formSent ? "Submit Inquiry" : "Send message"}
+                      Send message
                       <Send size={14} strokeWidth={1.5} />
                     </button>
                   </form>
