@@ -17,7 +17,8 @@ import {
   ArrowDownRight,
   ArrowUp,
   ChevronDown,
-  Code2,
+  ChevronLeft,
+  ChevronRight,
   Download,
   Github,
   Instagram,
@@ -32,9 +33,7 @@ import {
   Printer,
   Send,
   Sparkles,
-  Users,
   X,
-  Zap,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -68,8 +67,8 @@ const projects: Project[] = [
     title: "GlowAura",
     meta: "E-commerce Project | 2024",
     description:
-      "Designed and developed a responsive storefront focused on soft product presentation, clear browsing, cart flow, and checkout readiness.",
-    concept: "A clean fragrance and beauty shop interface with gentle product emphasis and simple buying paths.",
+      "Designed and built a responsive online shop with product browsing, cart flow, and checkout-ready pages.",
+    concept: "A simple beauty shop layout that makes products easy to view and buy.",
     tools: "HTML, CSS, PHP, JavaScript",
     timeSpent: "3 weeks",
     tags: ["HTML/CSS", "PHP", "JavaScript"],
@@ -81,8 +80,8 @@ const projects: Project[] = [
     title: "Hospital Billing System",
     meta: "Academic System Project | 2024 - 2025",
     description:
-      "Collaborated as a Group System Programmer to build a comprehensive academic hospital billing system, managing coding, database design, and system integration.",
-    concept: "A structured billing workflow that turns patient charges, records, and payment steps into a readable operator interface.",
+      "Worked as the group system programmer and helped build the billing flow, database structure, and main system features.",
+    concept: "A hospital billing system that organizes patient charges, records, and payment steps in one place.",
     tools: "PHP, MySQL, HTML, CSS",
     timeSpent: "1 semester",
     tags: ["HTML/CSS", "PHP", "MYSQL"],
@@ -94,8 +93,8 @@ const projects: Project[] = [
     title: "Point of Sale (POS) System",
     meta: "Retail System Project | 2025",
     description:
-      "Developed a fully functional POS system for retail clients, including inventory management, sales tracking, and receipt generation with database integration.",
-    concept: "A compact retail dashboard designed for fast scanning, quick item entry, and dependable transaction records.",
+      "Built a POS system for retail use with inventory tracking, sales records, receipt generation, and database storage.",
+    concept: "A retail tool made for faster item entry, clear totals, and organized transaction records.",
     tools: "PHP, JavaScript, MySQL",
     timeSpent: "4 weeks",
     tags: ["PHP", "JavaScript", "MySQL"],
@@ -107,8 +106,8 @@ const projects: Project[] = [
     title: "Numen in the Sewers",
     meta: "Game Development Project | 2026",
     description:
-      "Built a cross-platform 2D action-adventure game where players control a necromancer, defeat sewer monsters, collect souls, summon allies, and battle a final boss.",
-    concept: "A dark fantasy game concept built around summoning, survival pressure, and readable 2D combat feedback.",
+      "Created a 2D action-adventure game where the player defeats monsters, collects souls, summons allies, and fights a final boss.",
+    concept: "A dark fantasy game focused on survival, summoning, and clear 2D combat.",
     tools: "Unity, C#",
     timeSpent: "8 weeks",
     tags: ["Unity", "C#", "2D Game Development"],
@@ -120,8 +119,8 @@ const projects: Project[] = [
     title: "SHN",
     meta: "Personal Project | 2025 - 2026",
     description:
-      "Developed a web-based AI platform that brings multiple AI models into one host application for centralized, intuitive AI-assisted tasks.",
-    concept: "A unified assistant workspace that keeps multiple AI tools feeling organized instead of scattered.",
+      "Built a web-based AI platform that brings different AI tools into one simple workspace.",
+    concept: "A personal assistant dashboard made to keep AI tasks easier to access and manage.",
     tools: "HTML, Tailwind, JavaScript, PHP",
     timeSpent: "Ongoing",
     tags: ["HTML5", "Tailwind", "JavaScript", "PHP"],
@@ -133,8 +132,8 @@ const projects: Project[] = [
     title: "Resize",
     meta: "Personal Project | 2025 - 2026",
     description:
-      "Created a Google-authenticated image resizing app with real-time previews, original-versus-resized comparison, and processed image downloads.",
-    concept: "A lightweight utility interface for creators who need quick image resizing with visual confidence before download.",
+      "Created an image resizing app with Google login, live preview, size comparison, and download support.",
+    concept: "A quick tool for resizing images while checking the result before saving.",
     tools: "HTML, CSS, JavaScript, Firebase, OAuth",
     timeSpent: "2 weeks",
     tags: ["HTML5", "OAuth", "CSS3", "Firebase", "JavaScript", "Google"],
@@ -146,8 +145,8 @@ const projects: Project[] = [
     title: "GSIS",
     meta: "Capstone Project | 2025 - 2026",
     description:
-      "Built a school information system capstone covering learner records, enrollment workflows, attendance, grades, report cards, analytics, and role-based access.",
-    concept: "A school operations system shaped around registrar, teacher, and adviser workflows with practical reporting outputs.",
+      "Built a school information system for my capstone, covering learner records, enrollment, attendance, grades, report cards, analytics, and user roles.",
+    concept: "A school system made to support registrar, teacher, and adviser tasks with clear reports.",
     tools: "PHP, MySQL, JavaScript, Bootstrap",
     timeSpent: "Capstone cycle",
     tags: ["PHP", "MySQL", "JavaScript", "Bootstrap", "System Development"],
@@ -159,8 +158,8 @@ const projects: Project[] = [
     title: "Interface Flow Studies",
     meta: "Figma Prototype | Interface Flow",
     description:
-      "Mapped user paths, screen states, and priority actions through a Figma prototype before committing major system pages to code.",
-    concept: "Exploring how users move through forms, dashboards, and records while keeping the interface path clear.",
+      "Planned user paths, screen states, and main actions in Figma before building important system pages.",
+    concept: "A study of how users move through forms, dashboards, and records with less confusion.",
     tools: "Figma, wireframes, layout planning",
     timeSpent: "Ongoing",
     tags: ["Figma", "UX Flow", "Prototype"],
@@ -173,19 +172,19 @@ const processSteps = [
   {
     title: "Collect",
     description:
-      "Initialize by gathering references, requirements, sketches, screenshots, and constraints, deeply figure every problem based on client's needs, or independently identify transactional gapses for start ups, so the work has a clear direction before design choices get polished.",
+      "I start by collecting references, requirements, sketches, screenshots, and limits so I understand what the project needs before designing.",
     icon: Layers3,
   },
   {
     title: "Shape",
     description:
-      "Move all ideas into wireframes, interface states, or rough layouts, Visualizing the essential elements to include in features based on the collected information, then compare what feels useful, readable, and visually balanced.",
+      "I turn the idea into wireframes, screen states, or rough layouts, then check what feels useful, readable, and balanced.",
     icon: Palette,
   },
   {
     title: "Refine",
     description:
-      "Producing the final version, test the details even the tiniest ones, adjust for efficient interactions, and prepare the piece with a nice documentation and clean presentation.",
+      "I build the final version, test the details, adjust the spacing and interactions, then prepare the work with clear notes.",
     icon: Sparkles,
   },
 ];
@@ -218,6 +217,8 @@ const milestones = [
 ];
 
 const resumePath = "/resume.pdf";
+const bookCloseAudioPath = "/book-closing.mp3";
+const leafOpenAudioPath = "/leaf_open.mp3";
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 const softViewport = { once: true, amount: 0.18, margin: "0px 0px -10% 0px" } as const;
 
@@ -304,7 +305,7 @@ function SectionHeading({
             {title}
           </h2>
         )}
-        <p className={`narrative-text mt-6 max-w-xl text-[15px] font-light leading-8 text-white/40 ${isCentered ? "mx-auto" : ""}`}>
+        <p className={`narrative-text mt-6 max-w-xl text-[15px] font-light leading-8 text-white/40 ${isCentered ? "mx-auto text-center [text-align-last:center]" : ""}`}>
           {description}
         </p>
       </MotionReveal>
@@ -460,6 +461,365 @@ function ArrowLink({ children, href }: { children: React.ReactNode; href: string
       {children}
       <ArrowDownRight size={16} strokeWidth={1.5} />
     </a>
+  );
+}
+
+type PortfolioLeaf = {
+  id: number;
+  title?: string;
+  isCover?: boolean;
+  front: {
+    isCover?: boolean;
+    isInsideCover?: boolean;
+    content: React.ReactNode;
+  };
+  back: {
+    isCover?: boolean;
+    isInsideCover?: boolean;
+    content: React.ReactNode;
+  };
+};
+
+function PortfolioBook() {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [visualPage, setVisualPage] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [direction, setDirection] = useState<"forward" | "backward" | null>(null);
+  const [hoverSide, setHoverSide] = useState<"left" | "right" | null>(null);
+  const [hasMounted, setHasMounted] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const bookClosingAudioRef = useRef<HTMLAudioElement | null>(null);
+  const leafOpenAudioRef = useRef<HTMLAudioElement | null>(null);
+  const turnTimeoutsRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    setHasMounted(true);
+
+    return () => {
+      turnTimeoutsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId));
+      turnTimeoutsRef.current = [];
+    };
+  }, []);
+
+  useEffect(() => {
+    if (bookClosingAudioRef.current) {
+      bookClosingAudioRef.current.volume = 0.34;
+      bookClosingAudioRef.current.load();
+    }
+
+    if (leafOpenAudioRef.current) {
+      leafOpenAudioRef.current.volume = 0.26;
+      leafOpenAudioRef.current.load();
+    }
+  }, []);
+
+  const leaves: PortfolioLeaf[] = [
+    {
+      id: 0,
+      isCover: true,
+      front: {
+        isCover: true,
+        content: (
+          <div className="portfolio-book-cover">
+            <span className="portfolio-book-kicker">Mini Book</span>
+            <h3>Student Developer</h3>
+            <p>Perception</p>
+          </div>
+        ),
+      },
+      back: {
+        isInsideCover: true,
+        content: (
+          <div className="portfolio-book-inside">
+            <span>Me</span>
+            <h4>📎</h4>
+            <p>
+              A compact look at what approach I take, what I build, what I keep learning, and how I work with a team.
+            </p>
+          </div>
+        ),
+      },
+    },
+    {
+      id: 1,
+      title: "Intro",
+      front: {
+        content: (
+          <div className="portfolio-book-profile">
+            <div className="portfolio-book-photo">
+              <Image src="/img/me/me.png" alt="Shaun Michael Belono-ac portrait" fill sizes="(max-width: 768px) 190px, 260px" />
+            </div>
+            <span>Shaun Michael Belono-ac</span>
+            <p>
+              Pursuing (Fourth Year), Information Technology , aim to build web systems, system planning, analysis, and clear user flow.
+            </p>
+          </div>
+        ),
+      },
+      back: {
+        content: (
+          <div className="portfolio-book-note">
+            <span>Build</span>
+            <h4>Full Stack Development</h4>
+            <p>
+              I work on both the database and application side of a system while keeping the interface clean, readable, and easy to follow.
+            </p>
+          </div>
+        ),
+      },
+    },
+    {
+      id: 2,
+      title: "Practice",
+      front: {
+        content: (
+          <div className="portfolio-book-note">
+            <span>Learn</span>
+            <h4>Technical Skills</h4>
+            <p>
+              I continue to practice web development, database design, game development, image tools, and digital arts through school and personal projects.
+            </p>
+          </div>
+        ),
+      },
+      back: {
+        content: (
+          <div className="portfolio-book-note">
+            <span>Collaborate</span>
+            <h4>Collaboration</h4>
+            <p>
+              I organize ideas with references, screenshots, prototypes, and short notes so the team can understand the goal and build a working output.
+            </p>
+          </div>
+        ),
+      },
+    },
+    {
+      id: 3,
+      title: "Growth",
+      front: {
+        content: (
+          <div className="portfolio-book-note">
+            <span>Character</span>
+            <h4>Aspiring Professional</h4>
+            <p>
+              I try to stay understanding, calm, and friendly when working with others, especially when ideas need patience, clear communication, and respect.
+            </p>
+          </div>
+        ),
+      },
+      back: {
+        content: (
+          <div className="portfolio-book-note">
+            <span>Improve</span>
+            <h4>Continuous Improvement</h4>
+            <p>
+              I know what I need to improve, I recognize my mistakes, and I keep learning from them so my work and mindset can become better over time.
+            </p>
+          </div>
+        ),
+      },
+    },
+    {
+      id: 4,
+      isCover: true,
+      front: {
+        isInsideCover: true,
+        content: (
+          <div className="portfolio-book-inside">
+            <span>Motivation</span>
+            <h4>Henry Ford said</h4>
+            <p>
+              "Anyone who stops learning is old, whether at twenty or eighty. Anyone who keeps learning stays young."
+            </p>
+          </div>
+        ),
+      },
+      back: {
+        isCover: true,
+        content: (
+          <div className="portfolio-book-cover portfolio-book-cover--back">
+            <span className="portfolio-book-kicker"></span>
+            <h3></h3>
+            <p></p>
+          </div>
+        ),
+      },
+    },
+  ];
+
+  const totalLeaves = leaves.length;
+  const shouldReduceMotion = hasMounted && reduceMotion;
+  const animationMs = shouldReduceMotion ? 520 : 900;
+
+  const playSound = (sourceRef: React.MutableRefObject<HTMLAudioElement | null>) => {
+    const source = sourceRef.current;
+    if (!source) return;
+
+    try {
+      source.currentTime = 0;
+      source.play().catch(() => undefined);
+    } catch {
+      // Browsers can block audio before the first user gesture; the page turn should still work.
+    }
+  };
+
+  const handlePageChange = (pageIndex: number) => {
+    if (isAnimating || pageIndex < 0 || pageIndex > totalLeaves) return;
+
+    const nextDirection = pageIndex > currentPage ? "forward" : "backward";
+    const isCoverTransition =
+      (currentPage === 0 && pageIndex === 1) ||
+      (currentPage === 1 && pageIndex === 0) ||
+      (currentPage === totalLeaves - 1 && pageIndex === totalLeaves) ||
+      (currentPage === totalLeaves && pageIndex === totalLeaves - 1);
+
+    playSound(isCoverTransition ? bookClosingAudioRef : leafOpenAudioRef);
+
+    setIsAnimating(true);
+    setDirection(nextDirection);
+    setCurrentPage(pageIndex);
+
+    turnTimeoutsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId));
+    const visualTimeoutId = window.setTimeout(() => setVisualPage(pageIndex), animationMs / 2);
+    const doneTimeoutId = window.setTimeout(() => {
+      setIsAnimating(false);
+      setDirection(null);
+    }, animationMs);
+    turnTimeoutsRef.current = [visualTimeoutId, doneTimeoutId];
+  };
+
+  let flatLeftPages = currentPage;
+  let flatRightPages = totalLeaves - currentPage;
+
+  if (isAnimating) {
+    if (direction === "forward") {
+      flatLeftPages = currentPage - 1;
+    } else if (direction === "backward") {
+      flatRightPages = totalLeaves - (currentPage + 1);
+    }
+  }
+
+  const getLeftStackShadow = (leftCount: number) => {
+    if (leftCount <= 0) return "none";
+    const layers = Math.min(leftCount, 4);
+    const sheets = Array.from({ length: layers }, (_, index) => `-${index + 1}px ${index + 1}px 0 rgba(230,230,224,0.82)`);
+
+    return [...sheets, `-${layers + 2}px ${layers + 2}px 18px rgba(0,0,0,0.24)`].join(", ");
+  };
+
+  const getRightStackShadow = (rightCount: number) => {
+    if (rightCount <= 0) return "none";
+    const layers = Math.min(rightCount, 4);
+    const sheets = Array.from({ length: layers }, (_, index) => `${index + 1}px ${index + 1}px 0 rgba(230,230,224,0.82)`);
+
+    return [...sheets, `${layers + 2}px ${layers + 2}px 18px rgba(0,0,0,0.24)`].join(", ");
+  };
+
+  const closedShift = currentPage === 0 ? "-25%" : currentPage === totalLeaves ? "25%" : "0%";
+
+  return (
+    <div className="portfolio-book-stage">
+      <audio ref={bookClosingAudioRef} preload="auto" src={bookCloseAudioPath} />
+      <audio ref={leafOpenAudioRef} preload="auto" src={leafOpenAudioPath} />
+      <div
+        className="portfolio-book-shell"
+        style={{
+          transform: `translateX(${closedShift})`,
+          transitionDuration: `${animationMs}ms`,
+        }}
+        onMouseMove={(event) => {
+          if (isAnimating || shouldReduceMotion) return;
+          const rect = event.currentTarget.getBoundingClientRect();
+          setHoverSide(event.clientX - rect.left < rect.width / 2 ? "left" : "right");
+        }}
+        onMouseLeave={() => setHoverSide(null)}
+      >
+        <div
+          className="portfolio-book-stack portfolio-book-stack--left"
+          style={{ boxShadow: getLeftStackShadow(flatLeftPages), opacity: flatLeftPages > 0 ? 1 : 0 }}
+        />
+        <div
+          className="portfolio-book-stack portfolio-book-stack--right"
+          style={{ boxShadow: getRightStackShadow(flatRightPages), opacity: flatRightPages > 0 ? 1 : 0 }}
+        />
+        <div className="portfolio-book-spine" style={{ opacity: currentPage > 0 && currentPage < totalLeaves ? 1 : 0 }} />
+
+        <div className="portfolio-book">
+          {leaves.map((leaf, index) => {
+            const isFlipped = currentPage > index;
+            const isVisuallyFlipped = visualPage > index;
+            const isCoverLeaf = Boolean(leaf.isCover);
+            const isClickable = (index === currentPage || index === currentPage - 1) && !isAnimating;
+            const isFlipping = isAnimating && (index === currentPage || index === currentPage - 1);
+            let angle = isFlipped ? -180 : 0;
+            let zTranslate = isFlipped ? -(2 + index * 2) : 2 + (totalLeaves - index) * 2;
+
+            if (isFlipped && index === currentPage - 1) {
+              angle = hoverSide === "left" && !isAnimating ? -168 : -180;
+              zTranslate = -20;
+            } else if (!isFlipped && index === currentPage) {
+              angle = hoverSide === "right" && !isAnimating ? -12 : 0;
+              zTranslate = 20;
+            }
+
+            return (
+              <div
+                className={`portfolio-book-leaf ${isCoverLeaf ? "is-cover" : ""} ${isFlipping ? "is-flipping" : ""}`}
+                key={leaf.id}
+                style={{
+                  transform: `rotateY(${angle}deg) translateZ(${zTranslate}px)`,
+                  transitionDuration: isFlipping ? `${animationMs}ms` : "300ms",
+                  zIndex: isFlipping ? 20 : 10,
+                  pointerEvents: isClickable ? "auto" : "none",
+                }}
+                onClick={() => {
+                  if (!isClickable) return;
+                  handlePageChange(index === currentPage ? currentPage + 1 : currentPage - 1);
+                }}
+              >
+                <div
+                  className={`portfolio-book-page portfolio-book-page--front ${leaf.front.isCover ? "is-cover" : ""} ${leaf.front.isInsideCover ? "is-inside-cover" : ""}`}
+                  style={{ visibility: isVisuallyFlipped ? "hidden" : "visible" }}
+                >
+                  {leaf.front.content}
+                </div>
+                <div
+                  className={`portfolio-book-page portfolio-book-page--back ${leaf.back.isCover ? "is-cover" : ""} ${leaf.back.isInsideCover ? "is-inside-cover" : ""}`}
+                  style={{ visibility: isVisuallyFlipped ? "visible" : "hidden" }}
+                >
+                  {leaf.back.content}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="portfolio-book-crease" style={{ opacity: visualPage > 0 && visualPage < totalLeaves ? 1 : 0 }} />
+      </div>
+
+      <div className="portfolio-book-controls">
+        <button
+          aria-label="Previous page"
+          className="portfolio-book-control"
+          disabled={currentPage === 0 || isAnimating}
+          onClick={() => handlePageChange(currentPage - 1)}
+          type="button"
+        >
+          <ChevronLeft size={18} strokeWidth={1.5} />
+        </button>
+        <span className="portfolio-book-count">{String(Math.min(currentPage + 1, totalLeaves)).padStart(2, "0")}</span>
+        <button
+          aria-label="Next page"
+          className="portfolio-book-control"
+          disabled={currentPage === totalLeaves || isAnimating}
+          onClick={() => handlePageChange(currentPage + 1)}
+          type="button"
+        >
+          <ChevronRight size={18} strokeWidth={1.5} />
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -1152,25 +1512,15 @@ export default function PortfolioShell() {
                 >
                   Zup! I&apos;m <span className="outline-name">Shaun</span>
                 </motion.span>
-                <br />
-                <motion.span
-                  className="hero-line hero-line--3 text-white"
-                  initial={{ opacity: 0, y: 42 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.86, delay: 0.28, ease: smoothEase }}
-                >
-                  a Full Stack
-                </motion.span>
-                <br />
-                <motion.span
-                  className="hero-line hero-line--4 text-white/25"
-                  initial={{ opacity: 0, y: 42 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.86, delay: 0.38, ease: smoothEase }}
-                >
-                  Developer
-                </motion.span>
               </h1>
+              <motion.p
+                className="hero-role-copy mt-8 max-w-md font-light text-white/42"
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.82, delay: 0.3, ease: smoothEase }}
+              >
+                an Aspiring Full Stack Developer
+              </motion.p>
               <MotionReveal className="mt-14" delay={0.48}>
                 <p className="max-w-md text-sm font-light leading-7 text-white/35">
 
@@ -1236,57 +1586,16 @@ export default function PortfolioShell() {
         <section id="about" className="section-space site-container">
           <SectionHeading
             label="Artist Statement"
-            title="Practical Development approach perceiption"
+            title="Practical systems, shaped with visual care."
             animatedTitle
-            description="I create digital work that sits between system development and visual design such as interfaces, web applications, 2d game components to production, and use tools that are useful, then refined through UI/UX principles."
+            description="Solutions that are both functional and visually engaging, with a focus on user experience, accessibility, and performance."
           />
 
-          <div className="grid gap-10 md:grid-cols-3">
-            <Parallax speed={0.018}>
-              <MotionReveal>
-                <article className="py-2">
-                  <div className="mb-8 text-white/45">
-                    <Code2 size={28} strokeWidth={1} />
-                  </div>
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Build</p>
-                  <h3 className="premium-title text-xl font-light tracking-[-0.03em]">Full Stack Development</h3>
-                  <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
-                    Flexibility in facing both Database layer and Application layer in an app systems while paying attention to visualization principles, such as, layout, readability, interaction flow, and the small details that make a screen easier to trust.
-                  </p>
-                </article>
-              </MotionReveal>
-            </Parallax>
-
-            <Parallax speed={0.028}>
-              <MotionReveal delay={0.08}>
-                <article className="py-2">
-                  <div className="mb-8 text-white/45">
-                    <Zap size={28} strokeWidth={1} />
-                  </div>
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Learn</p>
-                  <h3 className="premium-title text-xl font-light tracking-[-0.03em]">Technical Skills</h3>
-                  <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
-                    My work moves across web development, database design, game development, image tools, and digital arts, giving the good step of fundamental advantages in IT fields.
-                  </p>
-                </article>
-              </MotionReveal>
-            </Parallax>
-
-            <Parallax speed={0.022}>
-              <MotionReveal delay={0.16}>
-                <article className="py-2">
-                  <div className="mb-8 text-white/45">
-                    <Users size={28} strokeWidth={1} />
-                  </div>
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Collaborate</p>
-                  <h3 className="premium-title text-xl font-light tracking-[-0.03em]">Collaboration</h3>
-                  <p className="narrative-text mt-3 text-sm font-light leading-relaxed text-white/45">
-                    I document ideas based on different roles perceiption in development cycle, through a good sense of Data Gathering such as, related samples/templates, screenshots, prototypes, and concise project notes so the final work shows both the result and the thinking behind it, leading use to build an output that will run and solve certain problems.
-                  </p>
-                </article>
-              </MotionReveal>
-            </Parallax>
-          </div>
+          <Parallax speed={0.018}>
+            <MotionReveal amount={0.28}>
+              <PortfolioBook />
+            </MotionReveal>
+          </Parallax>
         </section>
 
         {/* ---------------------------------------------------------- */}
@@ -1301,7 +1610,7 @@ export default function PortfolioShell() {
             title="Projects"
             align="center"
             revealDirection="center"
-            description="Selected pieces showing range across web systems, interface design, image tools, game development, capstone work, and process studies."
+            description="A set of school and personal projects across web systems, interface design, image tools, game development, and capstone work."
           />
 
           <div className="project-showcase">
@@ -1463,7 +1772,7 @@ export default function PortfolioShell() {
               <Parallax speed={0.024}>
                 <MotionReveal>
                   <p className="narrative-text max-w-sm text-sm font-light leading-7 text-white/35">
-                    Have an idea that needs a useful, considered digital home? Send a note and let&apos;s start a conversation.
+                    Have a project idea or a system that needs a clean interface? Send a message and let&apos;s talk about it.
                   </p>
                   <div className="mt-10 space-y-4 border-t border-white/[0.06] pt-6 text-sm text-white/45">
                     <a className="flex items-center gap-3 transition-colors hover:text-white" href="mailto:belonoacshaun@gmail.com">
@@ -1533,7 +1842,7 @@ export default function PortfolioShell() {
                 Shn<span className="text-white/25">.</span>
               </p>
               <p className="narrative-text mt-3 max-w-xs text-sm font-light leading-7 text-white/30">
-                Aspiring Full Stack Developer, currently specializing in System Development and Digital Arts
+                Student developer focused on system development, web interfaces, and digital arts.
               </p>
               <div className="mt-5 flex gap-2">
                 <a className="flex h-8 w-8 items-center justify-center border border-white/[0.06] text-white/40 transition-colors hover:border-white/30 hover:text-white" href="mailto:belonoacshaun1@gmail.com" aria-label="Email"><Mail size={14} /></a>

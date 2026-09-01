@@ -336,10 +336,16 @@ body {
 }
 
 .hero-title {
-  font-size: clamp(3.4rem, 11vw, 10rem);
+  font-size: clamp(3.8rem, 9.8vw, 8.8rem);
   font-weight: 200;
-  letter-spacing: -0.08em;
-  line-height: 0.88;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+}
+
+.hero-role-copy {
+  font-size: clamp(1.05rem, 2vw, 1.55rem);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
 }
 
 .outline-name {
@@ -364,6 +370,358 @@ body {
   text-justify: inter-word;
   hyphens: auto;
   overflow-wrap: anywhere;
+}
+
+/* ================================================================== */
+/*  Portfolio Book                                                     */
+/* ================================================================== */
+
+.portfolio-book-stage {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.75rem, 3vw, 2.25rem) 0 0;
+  user-select: none;
+}
+
+.portfolio-book-shell {
+  position: relative;
+  width: 100%;
+  max-width: min(100%, 860px);
+  aspect-ratio: 1.48 / 1;
+  cursor: pointer;
+  margin-inline: auto;
+  touch-action: manipulation;
+  transform-origin: center;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.portfolio-book {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  perspective: 1600px;
+  transform-style: preserve-3d;
+}
+
+.portfolio-book-stack {
+  position: absolute;
+  top: 2%;
+  z-index: 0;
+  width: 48.5%;
+  height: 96%;
+  background: #f1f0ea;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.portfolio-book-stack--left {
+  left: 1.5%;
+  border-radius: 8px 0 0 8px;
+}
+
+.portfolio-book-stack--right {
+  right: 1.5%;
+  border-radius: 0 8px 8px 0;
+}
+
+.portfolio-book-spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 1;
+  width: 8px;
+  background: #111111;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.46);
+  transform: translateX(-50%);
+  transition: opacity 900ms ease;
+}
+
+.portfolio-book-leaf {
+  position: absolute;
+  top: 2%;
+  bottom: 2%;
+  left: 50%;
+  width: 48.5%;
+  height: 96%;
+  cursor: pointer;
+  transform-origin: 0% 50%;
+  transform-style: preserve-3d;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.portfolio-book-leaf.is-cover {
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.portfolio-book-leaf.is-flipping {
+  transition-property: transform, z-index;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1), step-start;
+  will-change: transform;
+}
+
+.portfolio-book-page {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-left: 0;
+  border-radius: 0 8px 8px 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.07), transparent 8%),
+    radial-gradient(circle at 22% 12%, rgba(255, 255, 255, 0.92), transparent 38%),
+    #f1f0ea;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.14),
+    inset 3px 0 10px rgba(0, 0, 0, 0.035);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  color: #161616;
+  transform: translateZ(1px);
+}
+
+.portfolio-book-page--back {
+  border-right: 0;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px 0 0 8px;
+  background:
+    linear-gradient(270deg, rgba(0, 0, 0, 0.07), transparent 8%),
+    radial-gradient(circle at 78% 12%, rgba(255, 255, 255, 0.92), transparent 38%),
+    #f1f0ea;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.14),
+    inset -3px 0 10px rgba(0, 0, 0, 0.035);
+  transform: rotateY(180deg) translateZ(1px);
+}
+
+.portfolio-book-page.is-cover {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 34%),
+    radial-gradient(circle at 22% 16%, rgba(255, 255, 255, 0.18), transparent 28%),
+    linear-gradient(135deg, #1a1a18 0%, #34342e 54%, #10100f 100%);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset -4px 0 16px rgba(0, 0, 0, 0.22);
+  color: #f5f5f2;
+}
+
+.portfolio-book-page.is-cover::before {
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  content: "";
+  pointer-events: none;
+}
+
+.portfolio-book-page--front.is-cover {
+  border-radius: 0 12px 12px 0;
+}
+
+.portfolio-book-page--back.is-cover {
+  border-radius: 12px 0 0 12px;
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 4px 0 16px rgba(0, 0, 0, 0.22);
+}
+
+.portfolio-book-page.is-inside-cover {
+  border-color: rgba(0, 0, 0, 0.06);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05), transparent 12%),
+    #f6f5ef;
+}
+
+.portfolio-book-cover,
+.portfolio-book-inside,
+.portfolio-book-note,
+.portfolio-book-profile {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1rem, 3.2vw, 2.25rem);
+}
+
+.portfolio-book-cover {
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.portfolio-book-cover h3 {
+  max-width: 12ch;
+  font-size: clamp(1.55rem, 4vw, 3.05rem);
+  font-weight: 200;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.portfolio-book-cover p,
+.portfolio-book-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: clamp(0.58rem, 1.2vw, 0.72rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 242, 0.54);
+}
+
+.portfolio-book-cover--back h3 {
+  max-width: 10ch;
+  font-size: clamp(1.35rem, 3vw, 2.15rem);
+}
+
+.portfolio-book-inside {
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.075);
+  margin: clamp(0.8rem, 2vw, 1.25rem);
+  height: calc(100% - clamp(1.6rem, 4vw, 2.5rem));
+  text-align: center;
+}
+
+.portfolio-book-inside span,
+.portfolio-book-note span,
+.portfolio-book-profile span {
+  margin-bottom: 0.65rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: clamp(0.54rem, 1.2vw, 0.68rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(22, 22, 22, 0.42);
+}
+
+.portfolio-book-inside h4,
+.portfolio-book-note h4,
+.portfolio-book-profile h4 {
+  margin: 0;
+  font-size: clamp(1rem, 2.15vw, 1.72rem);
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.12;
+  color: #111111;
+}
+
+.portfolio-book-inside p,
+.portfolio-book-note p,
+.portfolio-book-profile p {
+  margin-top: clamp(0.8rem, 2vw, 1.1rem);
+  max-width: 24ch;
+  font-size: clamp(0.72rem, 1.2vw, 0.94rem);
+  font-weight: 300;
+  line-height: 1.65;
+  text-align: justify;
+  text-align-last: center;
+  color: rgba(22, 22, 22, 0.62);
+}
+
+.portfolio-book-note {
+  align-items: center;
+  text-align: center;
+}
+
+.portfolio-book-note::after {
+  position: absolute;
+  right: clamp(1rem, 3vw, 1.65rem);
+  bottom: clamp(1rem, 3vw, 1.65rem);
+  width: 2.35rem;
+  height: 1px;
+  background: rgba(22, 22, 22, 0.18);
+  content: "";
+}
+
+.portfolio-book-profile {
+  align-items: center;
+  gap: clamp(0.25rem, 0.8vw, 0.45rem);
+  text-align: center;
+}
+
+.portfolio-book-photo {
+  position: relative;
+  width: clamp(8.6rem, 24vw, 15rem);
+  aspect-ratio: 1 / 1.22;
+  margin-bottom: clamp(0.25rem, 0.8vw, 0.5rem);
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  transform: translateX(-14%);
+}
+
+.portfolio-book-photo img {
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.portfolio-book-crease {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 15;
+  width: 34px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.16), transparent 32%, transparent 68%, rgba(0, 0, 0, 0.16));
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 900ms ease;
+}
+
+.portfolio-book-controls {
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.portfolio-book-control {
+  display: inline-flex;
+  width: 2.65rem;
+  height: 2.65rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(255, 255, 255, 0.72);
+  transition: border-color 220ms ease, background 220ms ease, color 220ms ease, transform 220ms ease;
+}
+
+.portfolio-book-control:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.portfolio-book-control:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.portfolio-book-count {
+  min-width: 2ch;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.36);
 }
 
 /* ================================================================== */
@@ -913,6 +1271,13 @@ body {
   .liquid-scroll-cue svg {
     animation: none !important;
   }
+
+  .portfolio-book-shell,
+  .portfolio-book-leaf,
+  .portfolio-book-spine,
+  .portfolio-book-crease {
+    transition-duration: 520ms !important;
+  }
 }
 
 /* ================================================================== */
@@ -925,7 +1290,15 @@ body {
   }
 
   .hero-title {
-    font-size: clamp(3.2rem, 16vw, 5.5rem);
+    font-size: clamp(3.15rem, 14.6vw, 4.65rem);
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  .hero-role-copy {
+    max-width: 17rem;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   .mobile-nav-panel {
@@ -961,6 +1334,56 @@ body {
   .kinetic-type-display {
     display: block;
   }
+
+  .portfolio-book-stage {
+    padding-top: 0.25rem;
+  }
+
+  .portfolio-book-shell {
+    max-width: min(100%, 440px);
+    aspect-ratio: 1.32 / 1;
+  }
+
+  .portfolio-book-cover,
+  .portfolio-book-inside,
+  .portfolio-book-note,
+  .portfolio-book-profile {
+    padding: clamp(0.7rem, 2.8vw, 1rem);
+  }
+
+  .portfolio-book-page.is-cover::before {
+    inset: 0.62rem;
+  }
+
+  .portfolio-book-inside {
+    margin: 0.65rem;
+    height: calc(100% - 1.3rem);
+  }
+
+  .portfolio-book-inside p,
+  .portfolio-book-note p,
+  .portfolio-book-profile p {
+    max-width: 22ch;
+    margin-top: clamp(0.45rem, 1.4vw, 0.7rem);
+    font-size: clamp(0.6rem, 2.05vw, 0.7rem);
+    line-height: 1.36;
+  }
+
+  .portfolio-book-inside h4,
+  .portfolio-book-note h4,
+  .portfolio-book-profile h4 {
+    font-size: clamp(0.86rem, 3.05vw, 1.02rem);
+    line-height: 1.08;
+  }
+
+  .portfolio-book-photo {
+    width: clamp(6.65rem, 30vw, 8rem);
+    transform: translateX(-13%);
+  }
+
+  .portfolio-book-controls {
+    margin-top: 1.1rem;
+  }
 }
 
 @media (max-width: 380px) {
@@ -972,5 +1395,17 @@ body {
   .resume-preview-actions {
     width: 100%;
     justify-content: flex-end;
+  }
+
+  .portfolio-book-inside p,
+  .portfolio-book-note p,
+  .portfolio-book-profile p {
+    font-size: 0.64rem;
+  }
+
+  .portfolio-book-inside h4,
+  .portfolio-book-note h4,
+  .portfolio-book-profile h4 {
+    font-size: 0.9rem;
   }
 }
