@@ -1069,6 +1069,7 @@ function ProcessGalaxy({ index }: { index: number }) {
     let width = 0;
     let height = 0;
     let frameId = 0;
+    let lastDraw = 0;
     let start = performance.now();
 
     const resize = () => {
@@ -1088,7 +1089,6 @@ function ProcessGalaxy({ index }: { index: number }) {
     };
 
     const draw = (now: number) => {
-      frameId = 0;
       const elapsed = reduceMotion ? 0 : (now - start) / 1000;
       context.clearRect(0, 0, width, height);
 
@@ -1181,10 +1181,15 @@ function ProcessGalaxy({ index }: { index: number }) {
       }
 
       context.restore();
+    };
 
-      if (!reduceMotion) {
-        frameId = requestAnimationFrame(draw);
+    const animate = (now: number) => {
+      if (now - lastDraw > 40) {
+        draw(now);
+        lastDraw = now;
       }
+
+      frameId = requestAnimationFrame(animate);
     };
 
     const handleResize = () => {
@@ -1195,6 +1200,10 @@ function ProcessGalaxy({ index }: { index: number }) {
     handleResize();
 
     window.addEventListener("resize", handleResize);
+
+    if (!reduceMotion) {
+      frameId = requestAnimationFrame(animate);
+    }
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -1792,31 +1801,33 @@ export default function PortfolioShell() {
           <div className="grid gap-8 md:grid-cols-3">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
+              const direction = index === 0 ? "right" : index === 1 ? "up" : "left";
 
               return (
-                <Parallax speed={0.016 + index * 0.006} key={step.title}>
-                  <MotionReveal delay={index * 0.08}>
-                    <motion.article
-                      className={`process-galaxy process-galaxy--${index + 1} h-full px-1 py-10 md:px-2 md:py-12`}
-                      whileHover={reduceMotion ? undefined : { y: -6, scale: 1.01 }}
-                      transition={{ type: "spring", stiffness: 260, damping: 24, mass: 0.5 }}
-                    >
-                      <ProcessGalaxy index={index} />
-                      <div className="process-icon mb-8 flex h-10 w-10 items-center justify-center text-white/55">
-                        <Icon size={18} strokeWidth={1.25} />
-                      </div>
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
-                        0{index + 1}
-                      </p>
-                      <h3 className="premium-title mt-3 text-2xl font-light tracking-[-0.04em]">
-                        {step.title}
-                      </h3>
-                      <p className="narrative-text mt-4 text-sm font-light leading-7 text-white/40">
-                        {step.description}
-                      </p>
-                    </motion.article>
-                  </MotionReveal>
-                </Parallax>
+                <MotionReveal
+                  amount={0.24}
+                  delay={index * 0.16}
+                  direction={direction}
+                  key={step.title}
+                >
+                  <motion.article
+                    className={`process-galaxy process-galaxy--${index + 1} h-full px-1 py-10 md:px-2 md:py-12`}
+                  >
+                    <ProcessGalaxy index={index} />
+                    <div className="process-icon mb-8 flex h-10 w-10 items-center justify-center text-white/55">
+                      <Icon size={18} strokeWidth={1.25} />
+                    </div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
+                      0{index + 1}
+                    </p>
+                    <h3 className="premium-title mt-3 text-2xl font-light tracking-[-0.04em]">
+                      {step.title}
+                    </h3>
+                    <p className="narrative-text mt-4 text-sm font-light leading-7 text-white/40">
+                      {step.description}
+                    </p>
+                  </motion.article>
+                </MotionReveal>
               );
             })}
           </div>

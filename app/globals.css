@@ -933,6 +933,7 @@ body {
   position: relative;
   isolation: isolate;
   min-height: 23rem;
+  pointer-events: none;
   z-index: 0;
   text-shadow: 0 0 24px rgba(255, 255, 255, 0.035);
 }
@@ -954,7 +955,7 @@ body {
 }
 
 .process-galaxy--1 {
-  --process-glow-a: rgba(176, 63, 79, 0.2);
+  --process-glow-a: rgba(235, 239, 246, 0.11);
 }
 
 .process-galaxy--2 {
