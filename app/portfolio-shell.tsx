@@ -1020,20 +1020,49 @@ function ProcessGalaxy({ index }: { index: number }) {
     if (!context) return undefined;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const colors = ["204, 74, 92", "226, 230, 236", "226, 190, 255"];
-    const galaxyColor = colors[index % colors.length];
-    const stars = Array.from({ length: 96 }, (_, starIndex) => {
-      const arm = starIndex % 4;
-      const radius = Math.sqrt(Math.random()) * 0.5;
-      const angle = radius * 8.2 + arm * (Math.PI / 2) + (Math.random() - 0.5) * 1.36;
+    const stage = index === 0 ? "fragments" : index === 1 ? "forming" : "refined";
+    const stageColors = {
+      fragments: {
+        primary: "235, 239, 246",
+        accent: "166, 190, 226",
+      },
+      forming: {
+        primary: "226, 230, 236",
+        accent: "189, 215, 255",
+      },
+      refined: {
+        primary: "226, 190, 255",
+        accent: "255, 232, 190",
+      },
+    }[stage];
+
+    const fragmentStars = Array.from({ length: 82 }, () => ({
+      x: Math.random() * 0.92 - 0.46,
+      y: Math.random() * 0.74 - 0.37,
+      size: Math.random() * 0.86 + 0.18,
+      alpha: Math.random() * 0.42 + 0.18,
+      drift: Math.random() * 0.22 + 0.05,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    const galaxyStars = Array.from({ length: stage === "forming" ? 88 : 132 }, (_, starIndex) => {
+      const armCount = stage === "forming" ? 3 : 4;
+      const arm = starIndex % armCount;
+      const radius = Math.sqrt(Math.random()) * (stage === "forming" ? 0.48 : 0.56);
+      const armArc = stage === "forming" ? 5.4 : 8.6;
+      const angle =
+        radius * armArc +
+        arm * ((Math.PI * 2) / armCount) +
+        (Math.random() - 0.5) * (stage === "forming" ? 1.08 : 1.32);
 
       return {
         radius,
         angle,
-        size: Math.random() * 0.94 + 0.24,
-        alpha: Math.random() * 0.46 + 0.2,
-        drift: Math.random() * 0.12 + 0.025,
-        scatter: (Math.random() - 0.5) * 0.62,
+        size: Math.random() * (stage === "forming" ? 0.84 : 1.04) + 0.22,
+        alpha: Math.random() * (stage === "forming" ? 0.38 : 0.48) + 0.18,
+        drift: Math.random() * 0.1 + 0.018,
+        scatter: (Math.random() - 0.5) * (stage === "forming" ? 0.82 : 0.58),
+        arm,
       };
     });
 
@@ -1067,32 +1096,95 @@ function ProcessGalaxy({ index }: { index: number }) {
       const centerY = height * 0.6;
       const galaxyRadius = Math.min(width, height) * 0.58;
 
-      const coreGlow = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, galaxyRadius * 0.88);
-      coreGlow.addColorStop(0, `rgba(${galaxyColor},0.27)`);
-      coreGlow.addColorStop(0.28, `rgba(${galaxyColor},0.13)`);
-      coreGlow.addColorStop(0.62, `rgba(${galaxyColor},0.052)`);
-      coreGlow.addColorStop(1, "rgba(0,0,0,0)");
-      context.fillStyle = coreGlow;
-      context.fillRect(0, 0, width, height);
+      if (stage !== "fragments") {
+        const glowRadius = stage === "forming" ? galaxyRadius * 0.58 : galaxyRadius * 0.88;
+        const coreGlow = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowRadius);
+        coreGlow.addColorStop(0, `rgba(${stageColors.primary},${stage === "forming" ? 0.1 : 0.28})`);
+        coreGlow.addColorStop(0.34, `rgba(${stageColors.primary},${stage === "forming" ? 0.052 : 0.13})`);
+        coreGlow.addColorStop(0.68, `rgba(${stageColors.accent},${stage === "forming" ? 0.024 : 0.052})`);
+        coreGlow.addColorStop(1, "rgba(0,0,0,0)");
+        context.fillStyle = coreGlow;
+        context.fillRect(0, 0, width, height);
+      }
 
       context.save();
       context.translate(centerX, centerY);
       context.rotate(-0.18 + index * 0.08 + elapsed * 0.012);
       context.scale(1.08, 0.98);
 
-      for (const star of stars) {
-        const angle = star.angle + elapsed * star.drift;
-        const x = Math.cos(angle) * star.radius * galaxyRadius;
-        const y = Math.sin(angle) * star.radius * galaxyRadius + star.scatter * galaxyRadius * star.radius;
-        const twinkle = 0.75 + Math.sin(elapsed * 1.7 + star.angle * 3.2) * 0.25;
+      if (stage === "fragments") {
+        const driftScale = reduceMotion ? 0 : 1;
 
-        context.beginPath();
-        context.fillStyle = `rgba(${galaxyColor},${star.alpha * twinkle})`;
-        context.arc(x, y, star.size, 0, Math.PI * 2);
-        context.fill();
+        for (const star of fragmentStars) {
+          const looseOrbit = Math.sin(elapsed * star.drift + star.phase) * 0.018 * driftScale;
+          const x = (star.x + looseOrbit) * galaxyRadius * 1.22;
+          const y = (star.y + Math.cos(elapsed * star.drift + star.phase) * 0.014 * driftScale) * galaxyRadius;
+          const twinkle = 0.78 + Math.sin(elapsed * 1.9 + star.phase) * 0.22;
+
+          context.beginPath();
+          context.fillStyle = `rgba(${stageColors.primary},${star.alpha * twinkle})`;
+          context.arc(x, y, star.size, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        for (let i = 0; i < 7; i += 1) {
+          const angle = i * 1.37 - 0.64;
+          const x = Math.cos(angle) * galaxyRadius * (0.18 + i * 0.042);
+          const y = Math.sin(angle * 1.7) * galaxyRadius * 0.32;
+
+          context.beginPath();
+          context.strokeStyle = `rgba(${stageColors.accent},${0.09 - i * 0.006})`;
+          context.lineWidth = 1;
+          context.moveTo(x - 12, y + 5);
+          context.lineTo(x + 12, y - 7);
+          context.stroke();
+        }
+      } else {
+        for (const star of galaxyStars) {
+          if (stage === "forming" && star.arm === 2 && star.radius > 0.36) {
+            continue;
+          }
+
+          const angle = star.angle + elapsed * star.drift;
+          const x = Math.cos(angle) * star.radius * galaxyRadius;
+          const y = Math.sin(angle) * star.radius * galaxyRadius + star.scatter * galaxyRadius * star.radius;
+          const twinkle = 0.75 + Math.sin(elapsed * 1.7 + star.angle * 3.2) * 0.25;
+          const color = stage === "forming" && star.radius > 0.34 ? stageColors.accent : stageColors.primary;
+
+          context.beginPath();
+          context.fillStyle = `rgba(${color},${star.alpha * twinkle})`;
+          context.arc(x, y, star.size, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        if (stage === "forming") {
+          context.beginPath();
+          context.strokeStyle = `rgba(${stageColors.accent},0.11)`;
+          context.lineWidth = 1;
+
+          for (let i = 0; i < 78; i += 1) {
+            const progress = i / 77;
+            const angle = progress * 4.4 - 0.6;
+            const radius = progress * galaxyRadius * 0.48;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius * 0.72;
+
+            if (i === 0) {
+              context.moveTo(x, y);
+            } else {
+              context.lineTo(x, y);
+            }
+          }
+
+          context.stroke();
+        }
       }
 
       context.restore();
+
+      if (!reduceMotion) {
+        frameId = requestAnimationFrame(draw);
+      }
     };
 
     const handleResize = () => {
